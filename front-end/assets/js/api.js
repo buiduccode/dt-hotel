@@ -10,7 +10,7 @@ const BASE_URL = (() => {
         return 'http://localhost:5000/api';
     }
     // ⬇️  THAY THẾ bằng URL backend thật sau khi deploy lên Render
-    return 'https://YOUR-BACKEND-NAME.onrender.com/api';
+    return 'https://dt-hotel.onrender.com/api';
 })();
 
 // ── Token helpers ────────────────────────────────────────────
