@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý tài khoản</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .row-selected { background-color: #d0e4f7 !important; }
+        .form-grid-table td { padding: 6px 8px; vertical-align: middle; }
+        .form-grid-table input, .form-grid-table select { width: 100%; }
+        .hint-text { font-size: 12px; color: #888; margin-top: 2px; }
+    </style>
+</head>
+<body class="admin-page">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo2"><img src="/assets/images/logo2.svg" alt="DT Hotel Logo"></div>
+        <nav class="navbar">
+            <div class="menu-item" id="auth-container" style="position:relative;cursor:pointer;">
+                <span class="icon"><img src="/assets/images/TaiKhoan2.svg" alt=""></span>
+                <div id="auth-content"><p style="margin:0;font-weight:600;">Loading...</p></div>
+                <div id="logout-dropdown" style="display:none;position:absolute;top:100%;right:0;background:white;border:1px solid #ddd;border-radius:4px;box-shadow:0 4px 8px rgba(0,0,0,.1);width:120px;text-align:center;z-index:1000;">
+                    <p id="btn-logout" style="padding:10px;margin:0;color:#ff4d4d;font-weight:bold;cursor:pointer;">Đăng xuất</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <span class="icon"><img src="/assets/images/history2.svg" alt=""></span>
+                <div><p>Lịch sử</p><p class="sub-text">thuê phòng</p></div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main -->
+    <div class="Main-content">
+        <aside class="sidebar">
+            <div class="sidebar-title">Quản Lý Khách Sạn</div>
+            <nav class="sidebar-nav">
+                <a href="QuanLyPhong.html"    class="nav-item">Quản lý phòng</a>
+                <a href="QuanLyKhachHang.html" class="nav-item">Quản lý khách hàng</a>
+                <a href="QuanLyTaiKhoan.html"  class="nav-item active">Quản lý tài khoản</a>
+                <a href="LichSuDatPhong.html"  class="nav-item">Lịch sử đặt phòng</a>
+                <a href="ThongKeThuNhap.html"  class="nav-item">Thống kê thu nhập</a>
+                <a href="/pages/customer/Trangchu.html" class="nav-item"
+                   style="margin-top:16px;background:#e8f0fb;color:#204080;border-color:#204080;display:flex;align-items:center;gap:7px;font-weight:700;">
+                    &#128065; Xem trang khách hàng
+                </a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <!-- Form nhập liệu -->
+            <section class="form-container QuangLyPhong">
+                <table class="form-grid-table" style="width:100%;">
+                    <tr>
+                        <td style="width:140px;"><label for="fullname">Họ và tên:</label></td>
+                        <td><input type="text" id="fullname" placeholder="Nhập họ và tên..."></td>
+                        <td style="width:160px;padding-left:24px;"><label for="phone-acc">Số điện thoại:</label></td>
+                        <td><input type="text" id="phone-acc" placeholder="Nhập số điện thoại..."></td>
+                    </tr>
+                    <tr>
+                        <td><label for="username">Email (đăng nhập):</label></td>
+                        <td><input type="text" id="username" placeholder="Nhập email..."></td>
+                        <td style="padding-left:24px;"><label for="account-type">Loại tài khoản:</label></td>
+                        <td>
+                            <select id="account-type">
+                                <option value="1">Admin</option>
+                                <option value="2">Staff (Nhân viên)</option>
+                                <option value="3" selected>Customer (Khách hàng)</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="password">Mật khẩu:</label></td>
+                        <td colspan="3">
+                            <input type="password" id="password" placeholder="Nhập mật khẩu (để trống = giữ nguyên khi Cập Nhật)">
+                        </td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Nút bấm -->
+            <section class="action-bar">
+                <div class="btn-group">
+                    <button type="button" id="btn-them"     class="btn btn-blue">Thêm</button>
+                    <button type="button" id="btn-cap_nhap" class="btn btn-blue">Cập Nhật</button>
+                    <button type="button" id="btn-xoa"      class="btn btn-blue">Xóa</button>
+                </div>
+                <div class="search">
+                    <label>Tìm kiếm</label>
+                    <input type="text" id="searchAccount" onkeyup="filterAccounts()"
+                           placeholder="Nhập email, tên hoặc SĐT...">
+                </div>
+            </section>
+
+            <!-- Bảng danh sách -->
+            <section class="table-container">
+                <h3 class="table-title">Danh sách tài khoản</h3>
+                <table class="data-table" id="accountTable">
+                    <thead>
+                        <tr>
+                            <th>Mã TK</th>
+                            <th>Email (đăng nhập)</th>
+                            <th>Mật khẩu</th>
+                            <th>Loại tài khoản</th>
+                            <th>Mã khách hàng</th>
+                            <th>Mã nhân viên</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="6" style="text-align:center">Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/admin.js"></script>
+</body>
+</html>

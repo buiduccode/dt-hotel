@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DT Hotel - Trang chủ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+        body { background:#fff; color:#333; }
+
+        /* NAVBAR */
+        .navbar { display:flex; justify-content:space-between; align-items:center; padding:10px 60px; background:#fff; border-bottom:1px solid #eef0f3; position:sticky; top:0; z-index:100; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
+        .nav-logo img { height:45px; object-fit:contain; }
+        .nav-menu { display:flex; align-items:center; gap:25px; }
+        .nav-item { display:flex; align-items:center; gap:8px; text-decoration:none; color:#222; font-size:14px; font-weight:500; }
+        .nav-item i { color:#224083; }
+        .btn-nav-login { color:#224083 !important; font-weight:700; }
+        .btn-nav-register { background:#224083; color:#fff !important; padding:8px 18px; border-radius:6px; font-weight:600; }
+        .btn-nav-register:hover { background:#183063; }
+        .btn-logout { background:#d32f2f; color:#fff; padding:6px 14px; border-radius:4px; font-weight:600; cursor:pointer; border:none; font-size:13px; }
+        .user-greeting { font-weight:600; color:#224083; font-size:14px; text-decoration:none; }
+
+        /* HERO */
+        .hero { position:relative; height:500px;
+            background-color: #1a3a6e;
+            background-image: linear-gradient(rgba(0,0,0,0.35),rgba(0,0,0,0.45)),
+            url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1400&h=600&fit=crop');
+            background-size:cover; background-position:center; background-repeat:no-repeat;
+            display:flex; flex-direction:column; align-items:center; padding-top:50px; }
+        .hero-slogan { color:#fff; font-size:44px; font-weight:800; text-shadow:2px 2px 10px rgba(0,0,0,0.7); margin-bottom:10px; letter-spacing:1px; text-align:center; }
+        .hero-sub { color:rgba(255,255,255,0.9); font-size:16px; margin-bottom:35px; text-align:center; }
+
+        /* BOOKING FORM */
+        .booking-box { position:absolute; bottom:-55px; width:calc(100% - 120px); max-width:960px; background:#fff; border:2px solid #224083; border-radius:16px; padding:24px 35px; box-shadow:0 8px 28px rgba(0,0,0,0.15); }
+        .booking-tabs { display:flex; gap:10px; margin-top:-48px; margin-bottom:22px; justify-content:center; }
+        .tab-btn { background:#224083; color:#fff; border:none; padding:8px 20px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px; }
+        .tab-btn.active { background:#fff; color:#333; border:1px solid #999; }
+        .booking-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px 32px; align-items:end; }
+        .search-field { display:flex; flex-direction:column; gap:5px; }
+        .field-label { font-size:13px; font-weight:700; color:#000; display:flex; align-items:center; gap:5px; }
+        .booking-grid select, .booking-grid input[type="date"] { width:100%; padding:7px 10px; border:1px solid #999; border-radius:6px; font-size:13px; font-weight:600; }
+        .btn-search { background:#224083; color:#fff; font-size:15px; font-weight:700; padding:11px; border:none; border-radius:30px; cursor:pointer; width:100%; max-width:160px; justify-self:end; }
+        .btn-search:hover { background:#183063; }
+
+        /* ===== DANH SÁCH PHÒNG (Hình 1) ===== */
+        .rooms-section { margin-top:100px; padding:40px 60px 60px; background:#f5f7fb; }
+        .rooms-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; flex-wrap:wrap; gap:12px; }
+        .rooms-header-title { font-size:20px; font-weight:800; color:#1a1a1a; display:flex; align-items:center; gap:8px; }
+        .filter-tabs { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+        .filter-tab { padding:8px 18px; border-radius:20px; border:1.5px solid #d0d5e0; background:#fff; color:#333; font-size:13px; font-weight:600; cursor:pointer; transition:all 0.2s; }
+        .filter-tab.active { background:#224083; color:#fff; border-color:#224083; }
+        .filter-tab:hover:not(.active) { border-color:#224083; color:#224083; }
+        .filter-tab-avatar { width:38px; height:38px; border-radius:50%; background:#c8d0e0; border:1.5px solid #d0d5e0; cursor:pointer; }
+
+        .rooms-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:16px; }
+        .room-card { background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 6px rgba(0,0,0,0.08); cursor:pointer; transition:all 0.22s; text-decoration:none; color:inherit; display:block; border:1.5px solid transparent; }
+        .room-card:hover { transform:translateY(-5px); box-shadow:0 8px 22px rgba(34,64,131,0.14); border-color:#224083; }
+        .room-card.selected { border-color:#224083; box-shadow:0 0 0 3px rgba(34,64,131,0.15); }
+        .room-card-img { width:100%; height:130px; object-fit:cover; background:#e8eaf0; display:block; }
+        .room-card-body { padding:10px 12px 12px; }
+        .room-card-name { font-size:13px; font-weight:700; color:#1a1a1a; margin-bottom:4px; }
+        .room-type-badge { display:inline-block; font-size:11px; padding:2px 10px; border-radius:10px; font-weight:600; margin-bottom:5px; }
+        .badge-phongdon  { background:#dbeafe; color:#1d4ed8; }
+        .badge-phongdon2 { background:#dbeafe; color:#2563eb; border:1px solid #93c5fd; }
+        .badge-phongdoi  { background:#dcfce7; color:#16a34a; }
+        .badge-phongdoi2 { background:#d1fae5; color:#059669; border:1px solid #6ee7b7; }
+        .badge-suite     { background:#fce7f3; color:#db2777; }
+        .badge-giadin    { background:#fef3c7; color:#d97706; }
+        .badge-vip       { background:#ede9fe; color:#7c3aed; }
+        .room-card-price { font-size:14px; font-weight:800; color:#d32f2f; }
+
+        /* SECTION CHUNG */
+        .section { padding:50px 60px; }
+        .section-title { font-size:22px; font-weight:700; color:#1a1a1a; margin-bottom:24px; position:relative; padding-bottom:10px; }
+        .section-title::after { content:''; position:absolute; bottom:0; left:0; width:50px; height:3px; background:#224083; border-radius:2px; }
+
+        /* WHY US */
+        .why-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:24px; }
+        .why-card { text-align:center; padding:30px 20px; background:#fff; border-radius:12px; border:1px solid #eef0f5; }
+        .why-card i { font-size:36px; color:#224083; margin-bottom:14px; }
+        .why-card h4 { font-size:15px; font-weight:700; margin-bottom:8px; }
+        .why-card p { font-size:13px; color:#777; line-height:1.6; }
+
+        .loading-dots { text-align:center; padding:30px; color:#888; grid-column:1/-1; }
+        .loading-dots i { color:#224083; font-size:28px; animation:spin 1s linear infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+
+        .empty-msg { text-align:center; padding:40px; color:#888; font-size:14px; grid-column:1/-1; }
+
+        /* ========== RESPONSIVE ========== */
+
+        /* Tablet lớn / laptop nhỏ: ≤1024px */
+        @media (max-width: 1024px) {
+            .navbar { padding: 10px 24px; }
+            .rooms-section { padding: 40px 24px 50px; }
+            .section { padding: 40px 24px; }
+            .rooms-grid { grid-template-columns: repeat(4, 1fr); gap: 14px; }
+            .why-grid { grid-template-columns: repeat(2, 1fr); }
+            .booking-box { width: calc(100% - 48px); padding: 20px 24px; }
+            .booking-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero { height: 420px; }
+            .hero-slogan { font-size: 34px; }
+        }
+
+        /* Tablet đứng: ≤768px */
+        @media (max-width: 768px) {
+            /* Navbar */
+            .navbar { padding: 10px 16px; flex-wrap: wrap; gap: 8px; }
+            .nav-menu { gap: 12px; flex-wrap: wrap; }
+            .nav-item span, .nav-item { font-size: 13px; }
+            .btn-nav-register { padding: 6px 12px; font-size: 12px; }
+
+            /* Hero */
+            .hero { height: auto; min-height: 340px; padding: 40px 16px 80px; }
+            .hero-slogan { font-size: 26px; letter-spacing: 0; }
+            .hero-sub { font-size: 14px; margin-bottom: 20px; }
+
+            /* Booking box */
+            .booking-box { position: static; width: 100%; margin: 0 auto; border-radius: 12px;
+                           padding: 18px 16px; transform: none; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+            .booking-tabs { margin-top: 0; flex-wrap: wrap; justify-content: center; }
+            .booking-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+            .btn-search { max-width: 100%; justify-self: stretch; }
+
+            /* Rooms */
+            .rooms-section { margin-top: 0; padding: 28px 16px 40px; }
+            .rooms-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+            .rooms-header-title { font-size: 17px; }
+            .filter-tabs { gap: 8px; width: 100%; overflow-x: auto; padding-bottom: 4px;
+                           flex-wrap: nowrap; -webkit-overflow-scrolling: touch; }
+            .filter-tab { white-space: nowrap; padding: 7px 14px; font-size: 12px; flex-shrink: 0; }
+            .filter-tab-avatar { flex-shrink: 0; }
+            .rooms-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .room-card-img { height: 110px; }
+
+            /* Why */
+            .why-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
+            .why-card { padding: 20px 14px; }
+            .section { padding: 30px 16px; }
+            .section-title { font-size: 18px; }
+        }
+
+        /* Mobile nhỏ: ≤480px */
+        @media (max-width: 480px) {
+            /* Navbar — ẩn text, chỉ giữ icon + nút chính */
+            .navbar { padding: 8px 12px; }
+            .nav-item .nav-text { display: none; }
+            .nav-logo img { height: 36px; }
+            .btn-nav-register { padding: 6px 10px; font-size: 12px; }
+            .btn-logout { padding: 5px 10px; font-size: 12px; }
+
+            /* Hero */
+            .hero { min-height: 280px; padding: 30px 12px 70px; }
+            .hero-slogan { font-size: 20px; }
+            .hero-sub { font-size: 13px; }
+
+            /* Booking box */
+            .booking-box { padding: 14px 12px; }
+            .booking-tabs { gap: 6px; }
+            .tab-btn { padding: 7px 12px; font-size: 12px; }
+            .booking-grid { grid-template-columns: 1fr; }
+
+            /* Rooms */
+            .rooms-section { padding: 24px 12px 36px; }
+            .rooms-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .room-card-img { height: 95px; }
+            .room-card-body { padding: 8px 10px 10px; }
+            .room-card-name { font-size: 12px; }
+            .room-card-price { font-size: 13px; }
+            .room-type-badge { font-size: 10px; padding: 2px 7px; }
+
+            /* Why */
+            .why-grid { grid-template-columns: 1fr; }
+            .section { padding: 24px 12px; }
+        }
+
+        /* Mobile rất nhỏ: ≤360px */
+        @media (max-width: 360px) {
+            .rooms-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .hero-slogan { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-logo"><img src="../../assets/images/logo.png" alt="DT Hotel" onerror="this.src='../../assets/images/logo2.jpg'"></div>
+    <div class="nav-menu">
+        <div id="nav-auth-section" style="display:flex;align-items:center;gap:14px;">
+            <a href="../auth/login.html" class="nav-item btn-nav-login"><i class="fa-regular fa-user"></i> <span class="nav-text">Đăng nhập</span></a>
+            <a href="../auth/SignUp.html" class="nav-item btn-nav-register"><span class="nav-text">Đăng ký</span></a>
+        </div>
+        <a href="lichsu.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> <span class="nav-text">Lịch sử thuê phòng</span></a>
+    </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+    <h1 class="hero-slogan">Khách sạn DT – Đẳng cấp 5 sao</h1>
+    <p class="hero-sub">Trải nghiệm nghỉ dưỡng sang trọng ngay tại trung tâm thành phố</p>
+
+    <div class="booking-box">
+        <div class="booking-tabs">
+            <button class="tab-btn active" data-type="dem"><i class="fa-solid fa-moon"></i> Thuê qua đêm</button>
+            <button class="tab-btn" data-type="ngay"><i class="fa-solid fa-calendar-days"></i> Thuê theo ngày</button>
+            <button class="tab-btn" data-type="gio"><i class="fa-solid fa-clock"></i> Thuê theo giờ</button>
+        </div>
+        <form id="bookingForm">
+            <div class="booking-grid">
+                <div class="search-field">
+                    <label class="field-label"><i class="fa-solid fa-arrow-right-to-bracket"></i> Nhận phòng</label>
+                    <input type="date" id="checkin" required>
+                </div>
+                <div class="search-field">
+                    <label class="field-label"><i class="fa-solid fa-arrow-right-from-bracket"></i> Trả phòng</label>
+                    <input type="date" id="checkout" required>
+                </div>
+                <div class="search-field">
+                    <label class="field-label"><i class="fa-solid fa-user-group"></i> Số khách</label>
+                    <select id="selectKhach">
+                        <option>1 người</option><option>2 người</option>
+                        <option>3 người</option><option>4 người</option><option>5+ người</option>
+                    </select>
+                </div>
+                <div class="search-field">
+                    <label class="field-label"><i class="fa-solid fa-door-open"></i> Loại phòng</label>
+                    <select id="selectLoai">
+                        <option value="">Tất cả loại</option>
+                        <option>Standard</option><option>Superior</option><option>Deluxe</option>
+                        <option>Family</option><option>VIP</option><option>Suite</option><option>Penthouse</option>
+                    </select>
+                </div>
+                <div class="search-field">
+                    <label class="field-label"><i class="fa-solid fa-tag"></i> Khoảng giá</label>
+                    <select id="selectGia">
+                        <option value="">Mọi mức giá</option>
+                        <option value="0-600000">Dưới 600.000đ</option>
+                        <option value="600000-1500000">600k – 1.5 triệu</option>
+                        <option value="1500000-99999999">Trên 1.5 triệu</option>
+                    </select>
+                </div>
+                <div style="display:flex;align-items:flex-end;">
+                    <button type="submit" class="btn-search"><i class="fa-solid fa-magnifying-glass"></i> Tìm phòng</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</header>
+
+<!-- ===== DANH SÁCH PHÒNG (theo Hình 1) ===== -->
+<section class="rooms-section">
+    <div class="rooms-header">
+        <div class="rooms-header-title">Danh sách phòng khách sạn DT</div>
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">Tất cả</button>
+            <button class="filter-tab" data-filter="phongdon">Phòng Đơn</button>
+            <button class="filter-tab" data-filter="phongdoi">Phòng Đôi</button>
+            <button class="filter-tab" data-filter="suite">Suite</button>
+            <button class="filter-tab" data-filter="vip">VIP</button>
+            <button class="filter-tab" data-filter="giadin">Gia Đình</button>
+            <div class="filter-tab-avatar" title="Tài khoản"></div>
+        </div>
+    </div>
+    <div class="rooms-grid" id="roomsGrid">
+        <div class="loading-dots"><i class="fa-solid fa-spinner"></i></div>
+    </div>
+</section>
+
+<!-- VÌ SAO CHỌN CHÚNG TÔI -->
+<section class="section">
+    <div class="section-title">Vì sao chọn DT Hotel?</div>
+    <div class="why-grid">
+        <div class="why-card">
+            <i class="fa-solid fa-star"></i>
+            <h4>Tiêu chuẩn 5 sao</h4>
+            <p>Tất cả phòng được trang bị đầy đủ tiện nghi cao cấp, đạt chuẩn quốc tế.</p>
+        </div>
+        <div class="why-card">
+            <i class="fa-solid fa-location-dot"></i>
+            <h4>Vị trí trung tâm</h4>
+            <p>Tọa lạc tại vị trí đắc địa, dễ dàng di chuyển đến các điểm tham quan.</p>
+        </div>
+        <div class="why-card">
+            <i class="fa-solid fa-headset"></i>
+            <h4>Hỗ trợ 24/7</h4>
+            <p>Đội ngũ nhân viên chuyên nghiệp sẵn sàng phục vụ bạn mọi lúc mọi nơi.</p>
+        </div>
+        <div class="why-card">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h4>Đặt phòng an toàn</h4>
+            <p>Thanh toán bảo mật, chính sách hủy linh hoạt, không lo rủi ro.</p>
+        </div>
+    </div>
+</section>
+
+<script src="../../assets/js/api.js"></script>
+<script>
+// Phân loại badge dựa trên tên loại phòng
+function getBadgeInfo(roomName) {
+    const n = (roomName || '').toLowerCase();
+    if (n.includes('penthouse'))                          return { cls:'badge-vip',      label:'Penthouse' };
+    if (n.includes('vip'))                                return { cls:'badge-vip',      label:'VIP' };
+    if (n.includes('suite'))                              return { cls:'badge-suite',     label:'Suite' };
+    if (n.includes('family') || n.includes('gia'))        return { cls:'badge-giadin',    label:'Gia Đình' };
+    if (n.includes('deluxe') || n.includes('superior'))   return { cls:'badge-phongdoi2', label:'Phòng Đôi+' };
+    if (n.includes('double') || n.includes('đôi'))        return { cls:'badge-phongdoi',  label:'Phòng Đôi' };
+    if (n.includes('standard+') || n.includes('đơn+'))    return { cls:'badge-phongdon2', label:'Phòng Đơn+' };
+    return { cls:'badge-phongdon', label:'Phòng Đơn' };
+}
+
+// Lấy filter category
+function getFilterCategory(roomName) {
+    const n = (roomName || '').toLowerCase();
+    if (n.includes('penthouse') || n.includes('vip'))     return 'vip';
+    if (n.includes('suite'))                              return 'suite';
+    if (n.includes('family') || n.includes('gia'))        return 'giadin';
+    if (n.includes('deluxe') || n.includes('superior') || n.includes('double') || n.includes('đôi')) return 'phongdoi';
+    return 'phongdon';
+}
+
+// Navbar
+const u = getUser();
+if (u) {
+    document.getElementById('nav-auth-section').innerHTML = `
+        <a href="HoSo.html" class="user-greeting" style="text-decoration:none;cursor:pointer"><i class="fa-regular fa-circle-user"></i> Xin chào, ${u.fullname}</a>
+        <button class="btn-logout" id="btnLogout">Đăng xuất</button>
+    `;
+    document.getElementById('btnLogout').addEventListener('click', () => {
+        clearAuth(); window.location.reload();
+    });
+}
+
+// Tabs tìm kiếm
+let currentTab = 'dem';
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        currentTab = this.dataset.type;
+    });
+});
+
+// Ngày mặc định
+const today = new Date();
+const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate()+1);
+const fmt = d => d.toISOString().split('T')[0];
+document.getElementById('checkin').value  = fmt(today);
+document.getElementById('checkout').value = fmt(tomorrow);
+
+document.getElementById('bookingForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const searchData = {
+        checkin:   document.getElementById('checkin').value,
+        checkout:  document.getElementById('checkout').value,
+        soKhach:   document.getElementById('selectKhach').value,
+        loaiPhong: document.getElementById('selectLoai').value,
+        giaRange:  document.getElementById('selectGia').value,
+        loaiHinh:  currentTab,
+    };
+    localStorage.setItem('bookingSearchData', JSON.stringify(searchData));
+    window.location.href = 'ketquatimkiem.html';
+});
+
+// ===== DANH SÁCH PHÒNG =====
+let allRooms = [];
+let activeFilter = 'all';
+
+// Dữ liệu mẫu khi backend offline
+const DEMO_ROOMS = [
+    { room_id:1,  room_number:'A101', room_name:'Standard',   gia:350000,  trangthai:'AVAILABLE' },
+    { room_id:2,  room_number:'A102', room_name:'Standard',   gia:350000,  trangthai:'AVAILABLE' },
+    { room_id:3,  room_number:'A103', room_name:'Standard',   gia:420000,  trangthai:'AVAILABLE' },
+    { room_id:4,  room_number:'A104', room_name:'Double',     gia:550000,  trangthai:'AVAILABLE' },
+    { room_id:5,  room_number:'A105', room_name:'Double',     gia:550000,  trangthai:'AVAILABLE' },
+    { room_id:6,  room_number:'B201', room_name:'Superior',   gia:680000,  trangthai:'AVAILABLE' },
+    { room_id:7,  room_number:'B202', room_name:'Superior',   gia:680000,  trangthai:'AVAILABLE' },
+    { room_id:8,  room_number:'B203', room_name:'Deluxe',     gia:850000,  trangthai:'AVAILABLE' },
+    { room_id:9,  room_number:'C301', room_name:'Family',     gia:950000,  trangthai:'AVAILABLE' },
+    { room_id:10, room_number:'C302', room_name:'Family',     gia:950000,  trangthai:'AVAILABLE' },
+    { room_id:11, room_number:'D401', room_name:'Suite',      gia:1200000, trangthai:'AVAILABLE' },
+    { room_id:12, room_number:'D402', room_name:'Suite',      gia:1200000, trangthai:'AVAILABLE' },
+    { room_id:13, room_number:'E501', room_name:'VIP',        gia:2000000, trangthai:'AVAILABLE' },
+    { room_id:14, room_number:'E502', room_name:'Penthouse',  gia:3500000, trangthai:'AVAILABLE' },
+];
+
+function renderRooms(rooms) {
+    const grid = document.getElementById('roomsGrid');
+    const filtered = activeFilter === 'all' ? rooms : rooms.filter(r => getFilterCategory(r.room_name) === activeFilter);
+
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div class="empty-msg"><i class="fa-solid fa-door-open" style="font-size:32px;color:#ccc;display:block;margin-bottom:10px;"></i>Không có phòng phù hợp.</div>';
+        return;
+    }
+
+    grid.innerHTML = filtered.map((r, idx) => {
+        const badge = getBadgeInfo(r.room_name);
+        // Dùng r.room_id (không phải idx) → ảnh nhất quán với trang chi tiết
+        const imgSrc = getRoomImage(r.room_name, r.room_id, 'thumb');
+        return `
+        <a href="chitietphong.html?room_id=${r.room_id}" class="room-card">
+            <img class="room-card-img" src="${imgSrc}" alt="${r.room_name}"
+                 onerror="this.onerror=null;this.src=getRoomImage('standard',0,'thumb')">
+            <div class="room-card-body">
+                <div class="room-card-name">Phòng ${r.room_number}</div>
+                <span class="room-type-badge ${badge.cls}">${badge.label}</span>
+                <div class="room-card-price">${formatVND(r.gia)}</div>
+            </div>
+        </a>`;
+    }).join('');
+}
+
+// Filter tabs
+document.querySelectorAll('.filter-tab[data-filter]').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-tab[data-filter]').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        activeFilter = this.dataset.filter;
+        renderRooms(allRooms);
+    });
+});
+
+async function loadRooms() {
+    try {
+        const res = await api.get('/rooms');
+        allRooms = (res.data || []).filter(r => r.trangthai === 'AVAILABLE');
+        if (allRooms.length === 0) allRooms = DEMO_ROOMS;
+    } catch(err) {
+        allRooms = DEMO_ROOMS;
+    }
+    renderRooms(allRooms);
+}
+
+loadRooms();
+</script>
+
+<!-- NÚT QUAY VỀ QUẢN LÝ - chỉ hiện với admin -->
+<div id="btn-back-admin" style="
+    display: none;
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 9999;
+">
+    <a href="/pages/admin/QuanLyPhong.html" style="
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: #204080;
+        color: #fff;
+        text-decoration: none;
+        padding: 12px 20px;
+        border-radius: 30px;
+        font-size: 14px;
+        font-weight: 700;
+        box-shadow: 0 4px 16px rgba(32,64,128,0.4);
+        transition: background 0.2s, transform 0.15s;
+    "
+    onmouseover="this.style.background='#183063'; this.style.transform='translateY(-2px)'"
+    onmouseout="this.style.background='#204080'; this.style.transform='translateY(0)'"
+    >
+        &#8592; Quay về giao diện quản lý
+    </a>
+</div>
+<script>
+// Hiện nút chỉ khi đang đăng nhập với quyền admin
+(function() {
+    try {
+        var user = JSON.parse(localStorage.getItem('currentUser') || 'null');
+        // role_id: 1=ADMIN, 2=STAFF — hiện nút cho cả admin và staff
+        if (user && (user.role_id === 1 || user.role_id === 2)) {
+            document.getElementById('btn-back-admin').style.display = 'block';
+        }
+    } catch(e) {}
+})();
+</script>
+</body>
+</html>

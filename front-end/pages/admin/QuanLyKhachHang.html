@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Khách Hàng</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .row-selected { background-color: #d0e4f7 !important; }
+        .form-grid-table td { padding: 6px 8px; vertical-align: middle; }
+        .form-grid-table input, .form-grid-table select { width: 100%; }
+    </style>
+</head>
+<body class="admin-page">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo2"><img src="/assets/images/logo2.svg" alt="DT Hotel Logo"></div>
+        <nav class="navbar">
+            <div class="menu-item" id="auth-container" style="position:relative;cursor:pointer;">
+                <span class="icon"><img src="/assets/images/TaiKhoan2.svg" alt=""></span>
+                <div id="auth-content"><p style="margin:0;font-weight:600;">Loading...</p></div>
+                <div id="logout-dropdown" style="display:none;position:absolute;top:100%;right:0;background:white;border:1px solid #ddd;border-radius:4px;box-shadow:0 4px 8px rgba(0,0,0,.1);width:120px;text-align:center;z-index:1000;">
+                    <p id="btn-logout" style="padding:10px;margin:0;color:#ff4d4d;font-weight:bold;cursor:pointer;">Đăng xuất</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <span class="icon"><img src="/assets/images/history2.svg" alt=""></span>
+                <div><p>Lịch sử</p><p class="sub-text">thuê phòng</p></div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main -->
+    <div class="Main-content">
+        <aside class="sidebar">
+            <div class="sidebar-title">Quản Lý Khách Sạn</div>
+            <nav class="sidebar-nav">
+                <a href="QuanLyPhong.html"    class="nav-item">Quản lý phòng</a>
+                <a href="QuanLyKhachHang.html" class="nav-item active">Quản lý khách hàng</a>
+                <a href="QuanLyTaiKhoan.html"  class="nav-item">Quản lý tài khoản</a>
+                <a href="LichSuDatPhong.html"  class="nav-item">Lịch sử đặt phòng</a>
+                <a href="ThongKeThuNhap.html"  class="nav-item">Thống kê thu nhập</a>
+                <a href="/pages/customer/Trangchu.html" class="nav-item"
+                   style="margin-top:16px;background:#e8f0fb;color:#204080;border-color:#204080;display:flex;align-items:center;gap:7px;font-weight:700;">
+                    &#128065; Xem trang khách hàng
+                </a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <!-- Form nhập liệu -->
+            <section class="form-container QuangLyPhong">
+                <table class="form-grid-table" style="width:100%;">
+                    <tr>
+                        <td style="width:100px;"><label for="customer-name">Tên:</label></td>
+                        <td colspan="3"><input type="text" id="customer-name" placeholder="Nhập tên khách hàng..."></td>
+                    </tr>
+                    <tr>
+                        <td><label for="customer-gender">Giới tính:</label></td>
+                        <td style="width:160px;">
+                            <select id="customer-gender">
+                                <option value="Nam">Nam</option>
+                                <option value="Nữ">Nữ</option>
+                            </select>
+                        </td>
+                        <td style="padding-left:24px;width:80px;"><label for="customer-phone">SĐT:</label></td>
+                        <td><input type="text" id="customer-phone" placeholder="Nhập số điện thoại..."></td>
+                    </tr>
+                    <tr>
+                        <td><label for="customer-email">Email:</label></td>
+                        <td colspan="3"><input type="text" id="customer-email" placeholder="Nhập email..."></td>
+                    </tr>
+                    <tr>
+                        <td><label for="customer-address">Địa chỉ:</label></td>
+                        <td colspan="3"><input type="text" id="customer-address" placeholder="Nhập địa chỉ..."></td>
+                    </tr>
+                </table>
+            </section>
+
+            <!-- Nút bấm -->
+            <section class="action-bar">
+                <div class="btn-group">
+                    <button type="button" id="btn-them-customer"     class="btn btn-blue">Thêm</button>
+                    <button type="button" id="btn-capnhat-customer"  class="btn btn-blue">Cập Nhật</button>
+                    <button type="button" id="btn-xoa-customer"      class="btn btn-blue">Xóa</button>
+                </div>
+                <div class="search">
+                    <label>Tìm kiếm</label>
+                    <input type="text" id="searchCustomer" onkeyup="filterCustomers()"
+                           placeholder="Nhập mã, tên hoặc SĐT khách hàng...">
+                </div>
+            </section>
+
+            <!-- Bảng danh sách -->
+            <section class="table-container">
+                <h3 class="table-title">Danh sách khách hàng</h3>
+                <table class="data-table" id="customerTable">
+                    <thead>
+                        <tr>
+                            <th>Mã KH</th>
+                            <th>Tên</th>
+                            <th>Giới tính</th>
+                            <th>SĐT</th>
+                            <th>Email</th>
+                            <th>Địa chỉ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="6" style="text-align:center">Đang tải...</td></tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/admin.js"></script>
+</body>
+</html>

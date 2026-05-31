@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Sử Đặt Phòng</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 5px;
+        }
+
+        /* --- THÔNG TIN ĐẶT PHÒNG --- */
+        .booking-card {
+            background-color: #ffffff;
+            border: 1px solid #7f7f7f;
+            padding: 20px 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            row-gap: 12px;
+            column-gap: 40px;
+            position: relative;
+        }
+
+        .info-row {
+            display: flex;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .info-label {
+            font-weight: bold;
+            width: 160px;
+            flex-shrink: 0;
+
+        }
+
+        .info-value {
+            color: #000000;
+            padding-left: 30px
+        }
+
+        /* Định dạng phần Đơn vị tiền tệ nằm tách ra */
+        .currency {
+            margin-left: 10px;
+            display: inline-block;
+        }
+
+        /* các btn hủy phòng */
+        .card-action {
+            grid-column: span 2;
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 5px;
+        }
+
+        .btn-cancel {
+            background-color: #ce2c2c;
+            color: #ffffff;
+            border: none;
+            padding: 8px 24px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn-cancel:hover {
+            background-color: #a82222;
+        }
+    </style>
+</head>
+
+<body style="height: 10000px;">
+    <!-- Phần logo and thanh nav -->
+    <header class="header">
+        <!-- logo -->
+        <div class="logo2">
+            <img src="/assets/images/logo2.svg" alt="DT Hotel Logo">
+        </div>
+        <!-- nav-menu -->
+        <nav class="navbar">
+            <div class="menu-item">
+                <span class="icon"><img src="/assets/images/rent2.svg" alt=""></span>
+                <a class="ThuePhong" href="Trangchu.html">
+                    <p>Thuê phòng</p>
+                    <p>khách sạn</p>
+                </a>
+            </div>
+            <div class="menu-item">
+                <span class="icon"><img src="/assets/images/TaiKhoan2.svg" alt=""></span>
+                <div>
+                    <p>Nguyễn Võ</p>
+                    <p>Hoàng Phan</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <span class="icon"><img src="/assets/images/history2.svg" alt=""></span>
+                <div>
+                    <p>Lịch sử</p>
+                    <p class="sub-text">thuê phòng</p>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Main content -->
+    <div class="Main-content">
+        <!-- content  -->
+        <main class="content">
+            <!-- bảng lịch sử đặt hàng -->
+            <h2 class="page-title">Lịch sử đặt phòng</h2>
+            <!-- bảng 1 -->
+            <div class="booking-card">
+                <div class="info-row">
+                    <span class="info-label">Tên khách hàng:</span>
+                    <span class="info-value">Trần Quang Khải</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tên dịch vụ:</span>
+                    <span class="info-value">Đưa đón sân bay bằng xe máy</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tên phòng:</span>
+                    <span class="info-value">Phòng gia đình</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Thời gian đặt phòng:</span>
+                    <span class="info-value">19-04-2023</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tổng tiền:</span>
+                    <span class="info-value">660,000 <span class="currency">đ</span></span>
+                </div>
+                <div class="card-action">
+                    <button type="button" class="btn-cancel" onclick="confirmCancel()">Hủy phòng</button>
+                </div>
+            </div>
+            <!-- bảng 2 -->
+            <div class="booking-card">
+                <div class="info-row">
+                    <span class="info-label">Tên khách hàng:</span>
+                    <span class="info-value">Trần Quang Khải</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tên dịch vụ:</span>
+                    <span class="info-value">Đưa đón sân bay bằng xe máy</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tên phòng:</span>
+                    <span class="info-value">Phòng gia đình</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Thời gian đặt phòng:</span>
+                    <span class="info-value">19-04-2023</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tổng tiền:</span>
+                    <span class="info-value">660,000 <span class="currency">đ</span></span>
+                </div>
+
+                <div class="card-action">
+                    <button type="button" class="btn-cancel" onclick="confirmCancel()">Hủy phòng</button>
+                </div>
+            </div>
+            <!-- bảng 3 -->
+            <div class="booking-card">
+                <div class="info-row">
+                    <span class="info-label">Tên khách hàng:</span>
+                    <span class="info-value">Trần Quang Khải</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tên dịch vụ:</span>
+                    <span class="info-value">Đưa đón sân bay bằng xe máy</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tên phòng:</span>
+                    <span class="info-value">Phòng gia đình</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Thời gian đặt phòng:</span>
+                    <span class="info-value">19-04-2023</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Tổng tiền:</span>
+                    <span class="info-value">660,000 <span class="currency">đ</span></span>
+                </div>
+
+                <div class="card-action">
+                    <button type="button" class="btn-cancel" onclick="confirmCancel()">Hủy phòng</button>
+                </div>
+            </div>
+        </main>
+
+        </main>
+    </div>
+    <!-- form xác nhận hủy phòng -->
+    <div id="cancelModal" class="custom-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Xác nhận hủy phòng</h3>
+            </div>
+            <div class="modal-body">
+                <p>Bạn có chắc muốn hủy đặt phòng này không? </p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="closeCancelModal()">Quay lại</button>
+                <button class="btn-danger" id="btnConfirmDelete">Xác Nhận</button>
+            </div>
+        </div>
+    </div>
+    <!--javascript  -->
+    <script>
+        // Hàm này kích hoạt khi bấm nút "Hủy phòng" ở các thẻ phòng
+        function confirmCancel() {
+            // Hiển thị modal bằng cách đổi trạng thái hiển thị thành flex
+            document.getElementById('cancelModal').style.display = 'flex';
+            // khi người dùng nhấn nút "Xác Nhận" trong modal
+            document.getElementById('btnConfirmDelete').onclick = function () {
+                alert("Đã hủy phòng thành công!");
+                closeCancelModal(); // Đóng modal lại
+                // thêm code xóa hàng dữ liệu tại đây
+            };
+        }
+        // Hàm đóng khi bấm nút "Quay lại" hoặc click ra ngoài
+        function closeCancelModal() {
+            document.getElementById('cancelModal').style.display = 'none';
+        }
+        // Bấm ra vùng đen bên ngoài hộp thoại cũng tự đóng modal
+        window.onclick = function (event) {
+            let modal = document.getElementById('cancelModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/customer.js"></script>
+</body>
+</html>

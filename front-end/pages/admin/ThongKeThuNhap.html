@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê Thu Nhập - DT Hotel</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <style>
+        /* Thêm style riêng cho trang thống kê, không đụng style.css */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            border-left: 4px solid #224083;
+        }
+        .stat-card.green  { border-left-color: #2e7d32; }
+        .stat-card.orange { border-left-color: #e65100; }
+        .stat-card.red    { border-left-color: #d32f2f; }
+        .stat-label { font-size: 13px; color: #888; margin-bottom: 6px; }
+        .stat-value { font-size: 22px; font-weight: 800; color: #1a1a1a; }
+        .stat-sub   { font-size: 12px; color: #aaa; margin-top: 4px; }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .chart-card {
+            background: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+        }
+        .chart-card h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 16px;
+        }
+
+        .revenue-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .revenue-table th { background: #1e3a6e; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+        .revenue-table td { padding: 9px 14px; border-bottom: 1px solid #f0f0f0; }
+        .revenue-table tr:nth-child(even) td { background: #f8f9fc; }
+        .revenue-table .total-row td { font-weight: 700; background: #eef2ff; }
+
+        .filter-bar { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; }
+        .filter-bar select { padding: 6px 10px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px; }
+
+        .loading-spin { text-align: center; padding: 30px; color: #888; }
+        .loading-spin i { color: #224083; font-size: 22px; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <!-- HEADER – giống hệt QuanLyPhong.html -->
+    <header class="header">
+        <div class="logo2">
+            <img src="/assets/images/logo2.svg" alt="DT Hotel Logo">
+        </div>
+        <nav class="navbar">
+            
+            <div class="menu-item" id="auth-container" style="position:relative;cursor:pointer;">
+                <span class="icon"><img src="/assets/images/TaiKhoan2.svg" alt=""></span>
+                <div id="auth-content"></div>
+                <div id="logout-dropdown"
+                    style="display:none;position:absolute;top:100%;right:0;background:#fff;border:1px solid #ddd;border-radius:4px;box-shadow:0 4px 8px rgba(0,0,0,0.1);width:120px;text-align:center;z-index:1000;">
+                    <p id="btn-logout" style="padding:10px;margin:0;color:#ff4d4d;font-weight:bold;cursor:pointer;">Đăng xuất</p>
+                </div>
+            </div>
+            <div class="menu-item">
+                <span class="icon"><img src="/assets/images/history2.svg" alt=""></span>
+                <div><p>Lịch sử</p><p class="sub-text">thuê phòng</p></div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT – giống hệt cấu trúc QuanLyPhong.html -->
+    <div class="Main-content">
+
+        <!-- SIDEBAR – copy y chang QuanLyPhong -->
+        <aside class="sidebar">
+            <div class="sidebar-title">Quản Lý Khách Sạn</div>
+            <nav class="sidebar-nav">
+                <a href="QuanLyPhong.html"     class="nav-item">Quản lý phòng</a>
+                <a href="QuanLyKhachHang.html" class="nav-item">Quản lý khách hàng</a>
+                <a href="QuanLyTaiKhoan.html"  class="nav-item">Quản lý tài khoản</a>
+                <a href="LichSuDatPhong.html"  class="nav-item">Lịch sử đặt phòng</a>
+                <a href="ThongKeThuNhap.html"  class="nav-item active">Thống kê thu nhập</a>
+                            <a href="/pages/customer/Trangchu.html"
+                   class="nav-item"
+                   style="margin-top:16px; background:#e8f0fb; color:#204080; border-color:#204080; display:flex; align-items:center; gap:7px; font-weight:700;">
+                    &#128065; Xem trang kh&#225;ch h&#224;ng
+                </a>
+            </nav>
+        </aside>
+
+        <!-- NỘI DUNG CHÍNH -->
+        <main class="content" style="padding:24px;overflow-y:auto;">
+
+            <h2 style="font-size:20px;font-weight:700;margin-bottom:20px;color:#1a1a1a;display:flex;align-items:center;gap:8px;">
+                <i class="fa-solid fa-chart-line" style="color:#224083;"></i> Thống kê thu nhập
+            </h2>
+
+            <!-- 4 thẻ tóm tắt -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label"><i class="fa-solid fa-coins"></i> Tổng doanh thu</div>
+                    <div class="stat-value" id="totalRevenue"><i class="fa-solid fa-spinner fa-spin"></i></div>
+                    <div class="stat-sub">Tất cả thời gian</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-label"><i class="fa-solid fa-calendar-month"></i> Tháng này</div>
+                    <div class="stat-value" id="monthRevenue">-</div>
+                    <div class="stat-sub" id="monthLabel"></div>
+                </div>
+                <div class="stat-card orange">
+                    <div class="stat-label"><i class="fa-solid fa-receipt"></i> Số giao dịch</div>
+                    <div class="stat-value" id="totalTx">-</div>
+                    <div class="stat-sub">Tổng booking hoàn thành</div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-label"><i class="fa-solid fa-calculator"></i> Trung bình/booking</div>
+                    <div class="stat-value" id="avgRevenue">-</div>
+                    <div class="stat-sub">Giá trị trung bình</div>
+                </div>
+            </div>
+
+            <!-- Biểu đồ -->
+            <div class="chart-row">
+                <div class="chart-card">
+                    <h3><i class="fa-solid fa-chart-bar"></i> Doanh thu theo tháng</h3>
+                    <canvas id="barChart" height="110"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fa-solid fa-chart-pie"></i> Tỉ lệ theo loại phòng</h3>
+                    <canvas id="pieChart" height="200"></canvas>
+                </div>
+            </div>
+
+            <!-- Bảng chi tiết -->
+            <div class="chart-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+                    <h3 style="margin:0"><i class="fa-solid fa-table"></i> Chi tiết doanh thu</h3>
+                    <div class="filter-bar">
+                        <label style="font-size:13px;font-weight:600;">Năm:</label>
+                        <select id="filterYear">
+                            <option value="">Tất cả</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="revenueTableWrap">
+                    <div class="loading-spin"><i class="fa-solid fa-spinner"></i></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/admin.js"></script>
+    <script>
+    let revenueData = [];
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        requireAdmin();
+        renderAuthNav();
+
+        // Logout dropdown
+        const authCont = document.getElementById('auth-container');
+        const logoutDD = document.getElementById('logout-dropdown');
+        if (authCont) {
+            authCont.addEventListener('click', function (e) {
+                e.stopPropagation();
+                logoutDD.style.display = logoutDD.style.display === 'block' ? 'none' : 'block';
+            });
+            window.addEventListener('click', () => { logoutDD.style.display = 'none'; });
+        }
+        document.getElementById('btn-logout')?.addEventListener('click', () => {
+            clearAuth();
+            window.location.href = '/pages/auth/login.html';
+        });
+
+        await loadRevenuePage();
+        document.getElementById('filterYear').addEventListener('change', renderTable);
+    });
+
+    async function loadRevenuePage() {
+        try {
+            const res = await api.get('/dashboard/revenue/month');
+            revenueData = res.data || [];
+
+            const total   = revenueData.reduce((s, r) => s + Number(r.doanhThu || 0), 0);
+            const totalTx = revenueData.reduce((s, r) => s + Number(r.soGiaoDich || 0), 0);
+            const now     = new Date();
+            const thisMonth = revenueData.find(r => r.thang == now.getMonth() + 1 && r.nam == now.getFullYear());
+
+            document.getElementById('totalRevenue').textContent = formatVND(total);
+            document.getElementById('monthRevenue').textContent = formatVND(thisMonth?.doanhThu || 0);
+            document.getElementById('monthLabel').textContent   = `Tháng ${now.getMonth() + 1}/${now.getFullYear()}`;
+            document.getElementById('totalTx').textContent      = totalTx;
+            document.getElementById('avgRevenue').textContent   = totalTx ? formatVND(total / totalTx) : '0 đ';
+
+            // Thêm năm vào filter
+            const years = [...new Set(revenueData.map(r => r.nam))].sort();
+            const sel = document.getElementById('filterYear');
+            years.forEach(y => {
+                const o = document.createElement('option');
+                o.value = y; o.textContent = y;
+                sel.appendChild(o);
+            });
+
+            renderBarChart();
+            renderPieChart();
+            renderTable();
+        } catch (err) {
+            document.getElementById('totalRevenue').textContent = 'Lỗi tải dữ liệu';
+            console.error('loadRevenuePage:', err);
+        }
+    }
+
+    function renderBarChart() {
+        const last6 = revenueData.slice(-6);
+        new Chart(document.getElementById('barChart'), {
+            type: 'bar',
+            data: {
+                labels: last6.map(r => `T${r.thang}/${r.nam}`),
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: last6.map(r => Number(r.doanhThu || 0)),
+                    backgroundColor: 'rgba(30,58,110,0.8)',
+                    borderRadius: 6,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { ticks: { callback: v => (v / 1000000).toFixed(1) + 'tr' } } }
+            }
+        });
+    }
+
+    function renderPieChart() {
+        const top = revenueData.slice(-5);
+        new Chart(document.getElementById('pieChart'), {
+            type: 'doughnut',
+            data: {
+                labels: top.map(r => `T${r.thang}/${r.nam}`),
+                datasets: [{
+                    data: top.map(r => Number(r.doanhThu || 0)),
+                    backgroundColor: ['#1e3a6e','#2e7d32','#f5a623','#d32f2f','#7b1fa2'],
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+        });
+    }
+
+    function renderTable() {
+        const year     = document.getElementById('filterYear').value;
+        const filtered = year ? revenueData.filter(r => r.nam == year) : revenueData;
+        const total    = filtered.reduce((s, r) => s + Number(r.doanhThu || 0), 0);
+        const totalTx  = filtered.reduce((s, r) => s + Number(r.soGiaoDich || 0), 0);
+
+        if (filtered.length === 0) {
+            document.getElementById('revenueTableWrap').innerHTML =
+                '<p style="color:#888;text-align:center;padding:20px">Không có dữ liệu</p>';
+            return;
+        }
+
+        document.getElementById('revenueTableWrap').innerHTML = `
+            <table class="revenue-table">
+                <thead>
+                    <tr>
+                        <th>Năm</th>
+                        <th>Tháng</th>
+                        <th style="text-align:center">Số giao dịch</th>
+                        <th>Doanh thu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${filtered.map(r => `
+                        <tr>
+                            <td>${r.nam}</td>
+                            <td>Tháng ${r.thang}</td>
+                            <td style="text-align:center">${r.soGiaoDich}</td>
+                            <td style="font-weight:700;color:#d32f2f">${formatVND(r.doanhThu)}</td>
+                        </tr>
+                    `).join('')}
+                    <tr class="total-row">
+                        <td colspan="2"><strong>Tổng cộng</strong></td>
+                        <td style="text-align:center"><strong>${totalTx}</strong></td>
+                        <td style="color:#d32f2f"><strong>${formatVND(total)}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+        `;
+    }
+    </script>
+</body>
+</html>

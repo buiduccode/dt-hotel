@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DT Hotel - Đặt phòng khách sạn</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+        body { background-color:#f9fafb; color:#333; }
+
+        .navbar { display:flex; justify-content:space-between; align-items:center; padding:10px 60px; background:#fff; border-bottom:1px solid #eef0f3; }
+        .nav-logo img { height:45px; object-fit:contain; }
+        .nav-menu { display:flex; align-items:center; gap:25px; list-style:none; }
+        .nav-item { display:flex; align-items:center; gap:8px; text-decoration:none; color:#222; font-size:14px; font-weight:500; }
+        .nav-item i { color:#224083; }
+        .btn-nav-register { background:#224083; color:#fff !important; padding:8px 18px; border-radius:6px; font-weight:600; }
+        .btn-logout { background:#d32f2f; color:#fff !important; padding:6px 14px; border-radius:4px; font-weight:600; cursor:pointer; text-decoration:none; }
+        .user-greeting { font-weight:600; color:#224083; font-size:14px; }
+
+        .booking-main-wrap { max-width:900px; margin:40px auto; padding:0 20px; }
+        .booking-main-wrap h1 { font-size:24px; font-weight:700; color:#000; margin-bottom:25px; }
+        .section-block-title { font-size:16px; font-weight:600; color:#111; margin-bottom:12px; }
+        .bordered-content-card { background:#fff; border:1px solid #7f7f7f; padding:25px 35px; margin-bottom:30px; }
+
+        .user-info-grid { display:grid; grid-template-columns:1fr 1fr; row-gap:20px; column-gap:40px; }
+        .field-row-flex { display:flex; align-items:center; gap:15px; }
+        .field-row-flex.wide-col { grid-column:span 2; }
+        .field-row-flex label { font-size:15px; color:#000; width:70px; }
+        .field-row-flex input[type="text"],
+        .field-row-flex input[type="date"] { flex-grow:1; padding:6px 10px; border:1px solid #7f7f7f; outline:none; font-size:15px; border-radius:4px; }
+
+        .room-info-box { background:#f0f4ff; border:1px solid #c5d0e8; border-radius:6px; padding:16px 20px; margin-bottom:30px; }
+        .room-info-box h3 { color:#224083; margin-bottom:8px; font-size:16px; }
+        .room-info-box p { font-size:14px; color:#333; margin:4px 0; }
+        .room-info-box .room-price-big { font-size:22px; font-weight:700; color:#d32f2f; margin-top:8px; }
+
+        .services-grid { display:grid; grid-template-columns:repeat(3,1fr); row-gap:14px; column-gap:10px; }
+        .service-check-label { display:flex; align-items:center; justify-content:space-between; font-size:14px; cursor:pointer; padding-right:10px; gap:8px; }
+        .service-check-label input[type="checkbox"] { transform:scale(1.1); }
+        .service-cost { color:#d32f2f; font-weight:500; white-space:nowrap; }
+
+        .payment-breakdown { display:flex; flex-direction:column; gap:10px; font-size:15px; }
+        .breakdown-row { display:flex; justify-content:space-between; max-width:550px; padding:4px 0; }
+        .breakdown-row .cost-number { color:#d32f2f; font-weight:500; }
+        .breakdown-row.total-line { font-weight:700; border-top:1px dashed #ccc; padding-top:8px; margin-top:4px; }
+        .breakdown-row.total-line .cost-number { font-size:18px; font-weight:700; }
+
+        .payment-methods-row { display:flex; gap:15px; margin-bottom:30px; flex-wrap:wrap; }
+        .pay-method-btn { background:#fff; border:1px solid #7f7f7f; padding:8px 16px; border-radius:20px; font-size:13px; cursor:pointer; color:#000; transition:all 0.2s; }
+        .pay-method-btn.selected { border-color:#d32f2f; color:#d32f2f; background:#fff5f5; }
+
+        .action-checkout-align-right { display:flex; justify-content:flex-end; }
+        .btn-final-book { background:#224083; color:#fff; border:none; padding:12px 45px; font-size:20px; font-weight:700; border-radius:8px; cursor:pointer; }
+        .btn-final-book:hover { background:#183063; }
+        .btn-final-book:disabled { background:#999; cursor:not-allowed; }
+
+        .no-room-alert { background:#fff3cd; border:1px solid #ffc107; padding:20px; border-radius:6px; text-align:center; color:#856404; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">
+            <img src="/assets/images/logo.png" alt="DT Hotel">
+        </div>
+        <div class="nav-menu">
+            <a href="/pages/customer/Trangchu.html" class="nav-item">
+                <i class="fa-solid fa-hotel"></i> Thuê phòng khách sạn
+            </a>
+            <div id="nav-auth-section" style="display:flex;align-items:center;gap:15px;"></div>
+            <a href="/pages/customer/lichsu.html" class="nav-item">
+                <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử thuê phòng
+            </a>
+        </div>
+    </nav>
+
+    <main class="booking-main-wrap">
+        <h1>Đặt phòng khách sạn</h1>
+
+        <!-- Thông tin phòng đã chọn -->
+        <div id="room-info-display"></div>
+
+        <form id="datPhongForm">
+            <h2 class="section-block-title">Thông tin của bạn</h2>
+            <div class="bordered-content-card user-info-grid">
+                <div class="field-row-flex">
+                    <label>Tên:</label>
+                    <input type="text" id="customer-name" placeholder="Họ và tên">
+                </div>
+                <div class="field-row-flex">
+                    <label>SĐT:</label>
+                    <input type="text" id="customer-phone" placeholder="Số điện thoại">
+                </div>
+            </div>
+
+            <h2 class="section-block-title">Thông tin đặt phòng</h2>
+            <div class="bordered-content-card">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div class="field-row-flex">
+                        <label>Nhận phòng:</label>
+                        <input type="date" id="check-in" required>
+                    </div>
+                    <div class="field-row-flex">
+                        <label>Trả phòng:</label>
+                        <input type="date" id="check-out" required>
+                    </div>
+                </div>
+            </div>
+
+            <h2 class="section-block-title">Dịch vụ thêm:</h2>
+            <div class="bordered-content-card">
+                <div class="services-grid" id="serviceList">
+                    <p style="color:#888;font-style:italic">Đang tải dịch vụ...</p>
+                </div>
+            </div>
+
+            <h2 class="section-block-title">Chi tiết thanh toán:</h2>
+            <div class="bordered-content-card">
+                <div class="payment-breakdown" id="paymentBreakdown">
+                    <p style="color:#888">Chọn ngày để tính tiền...</p>
+                </div>
+            </div>
+
+            <h2 class="section-block-title" style="color:#d32f2f;">Phương thức thanh toán</h2>
+            <div class="payment-methods-row">
+                <button type="button" class="pay-method-btn selected" data-method="Thanh toán khi nhận phòng">Thanh toán khi nhận phòng</button>
+                <button type="button" class="pay-method-btn" data-method="MOMO">Thanh toán MOMO</button>
+                <button type="button" class="pay-method-btn" data-method="Ngân hàng">Thanh toán ngân hàng</button>
+            </div>
+
+            <div class="action-checkout-align-right">
+                <button type="submit" class="btn-final-book" id="btn-submit">Xác nhận đặt phòng</button>
+            </div>
+        </form>
+    </main>
+
+    <script src="/assets/js/api.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+
+        // ── Kiểm tra đăng nhập ──────────────────────────────
+        if (!isLoggedIn()) {
+            alert('Vui lòng đăng nhập để đặt phòng!');
+            window.location.href = '/pages/auth/login.html';
+            return;
+        }
+
+        const user = getUser();
+        const room = JSON.parse(localStorage.getItem('selectedRoom') || 'null');
+
+        // ── Navbar ──────────────────────────────────────────
+        const navAuth = document.getElementById('nav-auth-section');
+        navAuth.innerHTML = `
+            <a href="/pages/customer/HoSo.html" class="user-greeting" style="text-decoration:none;cursor:pointer"><i class="fa-regular fa-circle-user"></i> Xin chào, ${user.fullname}</a>
+            <a href="#" id="btn-logout" class="btn-logout">Đăng xuất</a>
+        `;
+        document.getElementById('btn-logout').addEventListener('click', e => {
+            e.preventDefault(); clearAuth(); window.location.href = '/pages/auth/login.html';
+        });
+
+        // ── Hiển thị thông tin phòng đã chọn ───────────────
+        const roomDisplay = document.getElementById('room-info-display');
+        if (!room) {
+            roomDisplay.innerHTML = `<div class="no-room-alert">
+                ⚠️ Bạn chưa chọn phòng. <a href="/pages/customer/ketquatimkiem.html">Quay lại tìm phòng</a>
+            </div>`;
+            document.getElementById('btn-submit').disabled = true;
+        } else {
+            roomDisplay.innerHTML = `
+                <div class="room-info-box">
+                    <h3>🏨 Phòng đã chọn</h3>
+                    <p><strong>${room.room_name}</strong> – Số phòng: ${room.room_number}</p>
+                    <p>${room.mieuTa}</p>
+                    <div class="room-price-big">${formatVND(room.gia)} / đêm</div>
+                </div>
+            `;
+        }
+
+        // ── Điền thông tin user ─────────────────────────────
+        document.getElementById('customer-name').value  = user.fullname || '';
+        document.getElementById('customer-phone').value = user.phone    || '';
+
+        // Điền ngày từ bookingSearchData nếu có
+        const searchData = JSON.parse(localStorage.getItem('bookingSearchData') || '{}');
+        if (searchData.checkin)  document.getElementById('check-in').value  = searchData.checkin;
+        if (searchData.checkout) document.getElementById('check-out').value = searchData.checkout;
+
+        // ── Load dịch vụ từ DB ──────────────────────────────
+        let services = [];
+        try {
+            const svcRes = await api.get('/services');
+            services = Array.isArray(svcRes) ? svcRes : (svcRes.data || []);
+            const serviceList = document.getElementById('serviceList');
+            if (services.length > 0) {
+                serviceList.innerHTML = services.map(s => `
+                    <label class="service-check-label">
+                        <span style="display:flex;align-items:center;gap:6px;">
+                            <input type="checkbox" name="service" value="${s.services_id}" data-gia="${s.gia}">
+                            ${s.name_services}
+                        </span>
+                        <span class="service-cost">${formatVND(s.gia)}</span>
+                    </label>
+                `).join('');
+                // Cập nhật tổng tiền khi tick dịch vụ
+                serviceList.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    cb.addEventListener('change', updateTotal);
+                });
+            } else {
+                serviceList.innerHTML = '<p style="color:#888">Không có dịch vụ</p>';
+            }
+        } catch(e) {
+            document.getElementById('serviceList').innerHTML = '<p style="color:#888">Không thể tải dịch vụ</p>';
+        }
+
+        // ── Tính tổng tiền ──────────────────────────────────
+        function updateTotal() {
+            const checkin  = document.getElementById('check-in').value;
+            const checkout = document.getElementById('check-out').value;
+            const breakdown = document.getElementById('paymentBreakdown');
+
+            if (!room || !checkin || !checkout) {
+                breakdown.innerHTML = '<p style="color:#888">Chọn ngày nhận và trả phòng để tính tiền...</p>';
+                return;
+            }
+
+            const d1 = new Date(checkin), d2 = new Date(checkout);
+            if (d2 <= d1) {
+                breakdown.innerHTML = '<p style="color:red">Ngày trả phòng phải sau ngày nhận phòng!</p>';
+                return;
+            }
+
+            const soNgay = Math.ceil((d2 - d1) / (1000*60*60*24));
+            const tienPhong = room.gia * soNgay;
+            let tongTien = tienPhong;
+            let rows = `
+                <div class="breakdown-row">
+                    <span>${room.room_name} – Phòng ${room.room_number} (${soNgay} đêm × ${formatVND(room.gia)})</span>
+                    <span class="cost-number">${formatVND(tienPhong)}</span>
+                </div>
+            `;
+
+            document.querySelectorAll('input[name="service"]:checked').forEach(cb => {
+                const gia = parseInt(cb.dataset.gia);
+                const ten = cb.closest('label').textContent.trim().split('\n')[0].trim();
+                tongTien += gia;
+                rows += `
+                    <div class="breakdown-row">
+                        <span>${ten}</span>
+                        <span class="cost-number">${formatVND(gia)}</span>
+                    </div>
+                `;
+            });
+
+            rows += `
+                <div class="breakdown-row total-line">
+                    <span>Tổng thanh toán:</span>
+                    <span class="cost-number">${formatVND(tongTien)}</span>
+                </div>
+            `;
+            breakdown.innerHTML = rows;
+        }
+
+        document.getElementById('check-in').addEventListener('change', updateTotal);
+        document.getElementById('check-out').addEventListener('change', updateTotal);
+        updateTotal();
+
+        // ── Phương thức thanh toán ──────────────────────────
+        let selectedMethod = 'Thanh toán khi nhận phòng';
+        document.querySelectorAll('.pay-method-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.pay-method-btn').forEach(b => b.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedMethod = this.dataset.method;
+            });
+        });
+
+        // ── Submit đặt phòng ────────────────────────────────
+        document.getElementById('datPhongForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!room) { alert('Chưa chọn phòng!'); return; }
+
+            const checkin  = document.getElementById('check-in').value;
+            const checkout = document.getElementById('check-out').value;
+
+            if (!checkin || !checkout) { alert('Vui lòng chọn ngày nhận và trả phòng!'); return; }
+            if (new Date(checkout) <= new Date(checkin)) {
+                alert('Ngày trả phòng phải sau ngày nhận phòng!'); return;
+            }
+
+            const btn = document.getElementById('btn-submit');
+            btn.disabled = true;
+            btn.textContent = 'Đang đặt phòng...';
+
+            try {
+                // 1. Tạo booking
+                const bookingRes = await api.post('/bookings', {
+                    user_id:   user.user_id,
+                    check_in:  checkin,
+                    check_out: checkout,
+                    room_ids:  [room.room_id]
+                });
+                const booking_id = bookingRes.data.booking_id;
+
+                // 2. Thêm dịch vụ đã chọn
+                const checkedServices = document.querySelectorAll('input[name="service"]:checked');
+                for (const cb of checkedServices) {
+                    try {
+                        await api.post('/services/booking', {
+                            booking_id,
+                            service_id: parseInt(cb.value),
+                            soLuong: 1
+                        });
+                    } catch(svcErr) { console.warn('Dịch vụ lỗi:', svcErr.message); }
+                }
+
+                // 3. Tạo thanh toán
+                try {
+                    await api.post('/payments', {
+                        booking_id,
+                        phuongThucThanhToan: selectedMethod
+                    });
+                } catch(payErr) { console.warn('Thanh toán ghi nhận sau:', payErr.message); }
+
+                alert(`✅ Đặt phòng thành công!\nMã booking: #${booking_id}\nPhòng: ${room.room_name} – ${room.room_number}`);
+                localStorage.removeItem('selectedRoom');
+                localStorage.removeItem('bookingSearchData');
+                window.location.href = '/pages/customer/lichsu.html';
+
+            } catch (err) {
+                alert('Đặt phòng thất bại: ' + (err.message || 'Lỗi không xác định'));
+                btn.disabled = false;
+                btn.textContent = 'Xác nhận đặt phòng';
+            }
+        });
+    });
+    </script>
+</body>
+</html>

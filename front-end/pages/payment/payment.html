@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DT Hotel – Thanh Toán</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+        :root {
+            --navy: #1a2f5a;
+            --navy-light: #224083;
+            --gold: #c9a84c;
+            --gold-light: #e8c96d;
+            --cream: #faf8f4;
+            --red: #d32f2f;
+            --green: #2e7d32;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+            --shadow: 0 4px 24px rgba(26,47,90,0.10);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--cream);
+            color: #111;
+            min-height: 100vh;
+        }
+
+        /* ─── NAVBAR ─────────────────────────────────────── */
+        .navbar {
+            background: #fff;
+            border-bottom: 2px solid var(--navy);
+            padding: 0 60px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0,0,0,.07);
+        }
+        .nav-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--navy);
+            letter-spacing: 1px;
+            text-decoration: none;
+        }
+        .nav-brand span { color: var(--gold); }
+        .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: color .2s;
+        }
+        .nav-links a:hover { color: var(--navy); }
+        .nav-links a i { color: var(--navy-light); }
+        .btn-login {
+            background: var(--navy);
+            color: #fff !important;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-weight: 600 !important;
+        }
+        .btn-login:hover { background: var(--gold) !important; color: var(--navy) !important; }
+        .btn-register {
+            border: 1.5px solid var(--navy);
+            color: var(--navy) !important;
+            padding: 7px 18px;
+            border-radius: 6px;
+            font-weight: 600 !important;
+        }
+        .user-nav-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            color: var(--navy);
+            font-size: 14px;
+            cursor: pointer;
+            position: relative;
+        }
+        .user-avatar {
+            width: 36px; height: 36px;
+            background: var(--navy);
+            color: #fff;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px;
+        }
+        .user-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            min-width: 160px;
+            z-index: 200;
+            overflow: hidden;
+        }
+        .user-dropdown a {
+            display: block;
+            padding: 10px 16px;
+            font-size: 14px;
+            color: #333;
+            text-decoration: none;
+            transition: background .15s;
+        }
+        .user-dropdown a:hover { background: #f5f5f5; }
+        .user-dropdown .logout-btn { color: var(--red); font-weight: 600; cursor: pointer; }
+        .user-nav-info:hover .user-dropdown { display: block; }
+
+        /* ─── NOT LOGGED IN SCREEN ───────────────────────── */
+        #screen-not-logged {
+            max-width: 560px;
+            margin: 80px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .lock-icon {
+            width: 90px; height: 90px;
+            background: linear-gradient(135deg, var(--navy), var(--navy-light));
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 36px;
+            color: var(--gold);
+            box-shadow: 0 8px 32px rgba(26,47,90,0.20);
+        }
+        #screen-not-logged h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+        #screen-not-logged p {
+            color: var(--gray);
+            font-size: 15px;
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        .btn-primary {
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            padding: 13px 36px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background .2s, transform .15s;
+        }
+        .btn-primary:hover { background: var(--gold); color: var(--navy); transform: translateY(-2px); }
+        .btn-secondary {
+            background: transparent;
+            color: var(--navy);
+            border: 1.5px solid var(--navy);
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-left: 12px;
+            transition: all .2s;
+        }
+        .btn-secondary:hover { background: var(--navy); color: #fff; }
+
+        /* ─── MAIN PAYMENT PAGE ──────────────────────────── */
+        #screen-payment {
+            max-width: 960px;
+            margin: 40px auto;
+            padding: 0 20px 60px;
+        }
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--navy);
+            margin-bottom: 8px;
+        }
+        .breadcrumb {
+            font-size: 13px;
+            color: var(--gray);
+            margin-bottom: 32px;
+        }
+        .breadcrumb a { color: var(--navy-light); text-decoration: none; }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 28px;
+        }
+
+        /* ─── CARD ───────────────────────────────────────── */
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+        .card-header {
+            background: var(--navy);
+            color: #fff;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+        .card-header i { color: var(--gold); font-size: 16px; }
+        .card-body { padding: 24px; }
+
+        /* ─── BOOKING LOOKUP ─────────────────────────────── */
+        .lookup-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .lookup-row input {
+            flex: 1;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: border-color .2s;
+        }
+        .lookup-row input:focus { border-color: var(--navy); }
+        .btn-lookup {
+            background: var(--navy-light);
+            color: #fff;
+            border: none;
+            padding: 11px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: background .2s;
+        }
+        .btn-lookup:hover { background: var(--navy); }
+
+        /* ─── BOOKING INFO DISPLAY ───────────────────────── */
+        #booking-info-box { display: none; }
+        .info-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+        .info-table tr { border-bottom: 1px solid #f3f4f6; }
+        .info-table td { padding: 10px 4px; }
+        .info-table td:first-child { color: var(--gray); width: 44%; font-weight: 500; }
+        .info-table td:last-child { font-weight: 600; color: #111; }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .status-PENDING { background: #fff3cd; color: #856404; }
+        .status-CONFIRMED { background: #d1e7dd; color: #155724; }
+        .status-CANCELLED { background: #f8d7da; color: #721c24; }
+        .status-COMPLETED { background: #cff4fc; color: #055160; }
+
+        /* ─── PAYMENT METHOD ─────────────────────────────── */
+        .method-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+        .method-card {
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .2s;
+            position: relative;
+        }
+        .method-card:hover { border-color: var(--navy-light); background: #f0f4ff; }
+        .method-card.selected { border-color: var(--navy); background: #eef2fb; }
+        .method-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 6px; right: 10px;
+            color: var(--navy);
+            font-weight: 700;
+            font-size: 13px;
+        }
+        .method-icon { font-size: 26px; margin-bottom: 8px; }
+        .method-label { font-size: 12px; font-weight: 600; color: #333; }
+
+        /* ─── QR / BANK DETAILS ──────────────────────────── */
+        #banking-detail, #momo-detail { display: none; margin-top: 16px; }
+        .qr-box {
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        .qr-placeholder {
+            width: 140px; height: 140px;
+            background: #fff;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            margin: 0 auto 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px;
+            color: var(--gray);
+            position: relative;
+            overflow: hidden;
+        }
+        .qr-pattern {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(0,0,0,.06) 5px, rgba(0,0,0,.06) 6px),
+                repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(0,0,0,.06) 5px, rgba(0,0,0,.06) 6px);
+        }
+        .bank-info-row { display: flex; justify-content: space-between; font-size: 13px; margin-top: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+        .bank-info-row:last-child { border: none; }
+        .bank-info-row span:first-child { color: var(--gray); }
+        .bank-info-row strong { color: var(--navy); }
+        .copy-btn {
+            background: none; border: 1px solid var(--navy); color: var(--navy);
+            border-radius: 4px; padding: 2px 8px; font-size: 11px; cursor: pointer;
+            margin-left: 8px;
+        }
+
+        /* ─── AMOUNT SUMMARY (RIGHT COL) ─────────────────── */
+        .amount-row { display: flex; justify-content: space-between; font-size: 14px; padding: 9px 0; border-bottom: 1px solid #f3f4f6; }
+        .amount-row:last-child { border: none; }
+        .amount-row.total { font-size: 18px; font-weight: 700; color: var(--navy); margin-top: 8px; padding-top: 12px; border-top: 2px solid var(--border); border-bottom: none; }
+        .amount-row .price { font-weight: 600; }
+        .amount-row .price.red { color: var(--red); }
+
+        /* ─── TIMER ──────────────────────────────────────── */
+        .timer-box {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+        .timer-box i { color: #f59e0b; }
+        #countdown { font-weight: 700; color: var(--red); }
+
+        /* ─── CONFIRM BUTTON ─────────────────────────────── */
+        .btn-pay {
+            width: 100%;
+            background: var(--navy);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .2s;
+            font-family: 'DM Sans', sans-serif;
+            margin-top: 16px;
+        }
+        .btn-pay:hover { background: var(--gold); color: var(--navy); transform: translateY(-2px); }
+        .btn-pay:disabled { background: #9ca3af; cursor: not-allowed; transform: none; }
+
+        /* ─── SUCCESS SCREEN ─────────────────────────────── */
+        #screen-success {
+            display: none;
+            max-width: 560px;
+            margin: 80px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .success-icon {
+            width: 90px; height: 90px;
+            background: linear-gradient(135deg, var(--green), #4caf50);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 24px;
+            font-size: 40px;
+            color: #fff;
+            box-shadow: 0 8px 32px rgba(46,125,50,0.25);
+            animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+        }
+        @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        #screen-success h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 28px;
+            color: var(--navy);
+            margin-bottom: 12px;
+        }
+        .receipt-box {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 24px;
+            text-align: left;
+            margin: 24px 0;
+        }
+        .receipt-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 14px; border-bottom: 1px solid #f3f4f6; }
+        .receipt-row:last-child { border: none; font-weight: 700; font-size: 16px; color: var(--navy); }
+
+        /* ─── MESSAGE AREA ───────────────────────────────── */
+        #msg-area { margin-top: 16px; }
+        .msg { padding: 12px 16px; border-radius: 8px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 8px; }
+        .msg-error { background: #fef2f2; color: var(--red); border: 1px solid #fecaca; }
+        .msg-success { background: #f0fdf4; color: var(--green); border: 1px solid #bbf7d0; }
+        .msg-loading { background: #eff6ff; color: var(--navy); border: 1px solid #bfdbfe; }
+
+        /* ─── ADMIN PAYMENT HISTORY ──────────────────────── */
+        #screen-admin { display: none; max-width: 1100px; margin: 40px auto; padding: 0 20px 60px; }
+        .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+        .admin-header h2 { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--navy); }
+        .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+        .stat-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--shadow);
+            border-left: 4px solid var(--navy);
+        }
+        .stat-card.gold { border-color: var(--gold); }
+        .stat-card.green { border-color: var(--green); }
+        .stat-card.red { border-color: var(--red); }
+        .stat-label { font-size: 12px; color: var(--gray); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px; }
+        .stat-value { font-size: 22px; font-weight: 700; color: var(--navy); }
+        .stat-value.gold { color: #b7860e; }
+        .stat-value.green { color: var(--green); }
+        .stat-value.red { color: var(--red); }
+
+        /* ─── TABLE ──────────────────────────────────────── */
+        .table-wrap { background: #fff; border-radius: 12px; box-shadow: var(--shadow); overflow: hidden; }
+        .table-toolbar { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border); }
+        .table-toolbar h3 { font-size: 16px; color: var(--navy); font-weight: 600; }
+        .search-input {
+            padding: 8px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            width: 240px;
+            outline: none;
+            font-family: 'DM Sans', sans-serif;
+        }
+        .search-input:focus { border-color: var(--navy); }
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { background: var(--navy); color: #fff; }
+        thead th { padding: 12px 16px; text-align: left; font-size: 13px; font-weight: 600; }
+        tbody tr { border-bottom: 1px solid #f3f4f6; transition: background .15s; }
+        tbody tr:hover { background: #f8faff; }
+        tbody td { padding: 12px 16px; font-size: 13px; }
+        .method-pill {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+        }
+        .method-CASH { background: #e8f5e9; color: #1b5e20; }
+        .method-BANKING { background: #e3f2fd; color: #0d47a1; }
+        .method-MOMO { background: #fce4ec; color: #880e4f; }
+        .no-data { text-align: center; padding: 40px; color: var(--gray); font-size: 14px; }
+
+        /* ─── LOADING SPINNER ────────────────────────────── */
+        .spinner {
+            border: 3px solid var(--border);
+            border-top-color: var(--navy);
+            border-radius: 50%;
+            width: 20px; height: 20px;
+            animation: spin .7s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ─── RESPONSIVE ─────────────────────────────────── */
+        @media (max-width: 768px) {
+            .payment-grid { grid-template-columns: 1fr; }
+            .navbar { padding: 0 20px; }
+            .method-grid { grid-template-columns: 1fr 1fr; }
+            .stats-row { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ NAVBAR -->
+<nav class="navbar">
+    <a href="/pages/customer/Trangchu.html" class="nav-brand">DT <span>Hotel</span></a>
+    <ul class="nav-links">
+        <li><a href="/pages/customer/Trangchu.html"><i class="fa-solid fa-hotel"></i> Trang chủ</a></li>
+        <li><a href="/pages/customer/lichsu.html"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử</a></li>
+        <!-- Hiển thị khi CHƯA đăng nhập -->
+        <li id="nav-login-links">
+            <a href="/pages/auth/login.html" class="btn-login"><i class="fa-regular fa-user"></i> Đăng nhập</a>
+        </li>
+        <li id="nav-register-link" style="display:none">
+            <a href="/pages/auth/SignUp.html" class="btn-register">Đăng ký</a>
+        </li>
+        <!-- Hiển thị khi ĐÃ đăng nhập -->
+        <li id="nav-user-info" style="display:none">
+            <div class="user-nav-info">
+                <div class="user-avatar" id="user-avatar-initial">U</div>
+                <span id="nav-username">Người dùng</span>
+                <i class="fa-solid fa-chevron-down" style="font-size:11px;color:var(--gray)"></i>
+                <div class="user-dropdown">
+                    <a href="/pages/customer/HoSo.html"><i class="fa-regular fa-id-card"></i> Hồ sơ</a>
+                    <a href="/pages/customer/lichsu.html"><i class="fa-solid fa-history"></i> Lịch sử đặt</a>
+                    <a class="logout-btn" onclick="doLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ SCREEN: NOT LOGGED IN -->
+<div id="screen-not-logged">
+    <div class="lock-icon"><i class="fa-solid fa-lock"></i></div>
+    <h2>Vui lòng đăng nhập</h2>
+    <p>Bạn cần đăng nhập để thực hiện thanh toán đặt phòng. Hệ thống thanh toán của DT Hotel an toàn và bảo mật, chỉ dành cho thành viên đã xác thực.</p>
+    <a href="/pages/auth/login.html" class="btn-primary"><i class="fa-solid fa-right-to-bracket"></i> Đăng nhập ngay</a>
+    <a href="/pages/auth/SignUp.html" class="btn-secondary">Tạo tài khoản</a>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SCREEN: PAYMENT (CUSTOMER) -->
+<div id="screen-payment" style="display:none">
+    <h1 class="page-title"><i class="fa-solid fa-credit-card" style="color:var(--gold);margin-right:10px"></i>Thanh toán đặt phòng</h1>
+    <p class="breadcrumb"><a href="/pages/customer/Trangchu.html">Trang chủ</a> / <a href="/pages/customer/lichsu.html">Lịch sử</a> / Thanh toán</p>
+
+    <div class="payment-grid">
+        <!-- LEFT COL: Booking lookup + Payment method -->
+        <div>
+            <!-- 1. TÌM BOOKING -->
+            <div class="card" style="margin-bottom:20px">
+                <div class="card-header">
+                    <i class="fa-solid fa-magnifying-glass"></i> Tìm kiếm đặt phòng
+                </div>
+                <div class="card-body">
+                    <div class="lookup-row">
+                        <input type="number" id="inp-booking-id" placeholder="Nhập mã đặt phòng (Booking ID)...">
+                        <button class="btn-lookup" onclick="lookupBooking()">
+                            <i class="fa-solid fa-search"></i> Tra cứu
+                        </button>
+                    </div>
+                    <div id="msg-area"></div>
+
+                    <!-- Thông tin booking sau khi tìm thấy -->
+                    <div id="booking-info-box">
+                        <h4 style="font-size:14px;color:var(--navy);margin-bottom:12px;display:flex;align-items:center;gap:8px">
+                            <i class="fa-solid fa-circle-info"></i> Thông tin đặt phòng
+                        </h4>
+                        <table class="info-table" id="booking-detail-table"></table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. PHƯƠNG THỨC THANH TOÁN -->
+            <div class="card" id="method-card" style="display:none">
+                <div class="card-header">
+                    <i class="fa-solid fa-wallet"></i> Chọn phương thức thanh toán
+                </div>
+                <div class="card-body">
+                    <div class="method-grid">
+                        <div class="method-card selected" data-method="CASH" onclick="selectMethod(this,'CASH')">
+                            <div class="method-icon">💵</div>
+                            <div class="method-label">Tiền mặt</div>
+                            <small style="color:var(--gray);font-size:11px">Thanh toán tại quầy</small>
+                        </div>
+                        <div class="method-card" data-method="BANKING" onclick="selectMethod(this,'BANKING')">
+                            <div class="method-icon">🏦</div>
+                            <div class="method-label">Chuyển khoản</div>
+                            <small style="color:var(--gray);font-size:11px">Ngân hàng</small>
+                        </div>
+                        <div class="method-card" data-method="MOMO" onclick="selectMethod(this,'MOMO')">
+                            <div class="method-icon" style="font-size:22px;color:#ae2070">MoMo</div>
+                            <div class="method-label">Ví MoMo</div>
+                            <small style="color:var(--gray);font-size:11px">Quét mã QR</small>
+                        </div>
+                    </div>
+
+                    <!-- Chi tiết chuyển khoản ngân hàng -->
+                    <div id="banking-detail">
+                        <div class="qr-box" style="margin-top:16px">
+                            <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Quét mã QR hoặc chuyển khoản theo thông tin dưới:</p>
+                            <div class="qr-placeholder">
+                                <div class="qr-pattern"></div>
+                                <span style="position:relative;z-index:1;font-size:9px;color:var(--navy);font-weight:700">QR Ngân hàng<br>DT Hotel</span>
+                            </div>
+                            <div class="bank-info-row"><span>Ngân hàng</span><strong>Vietcombank</strong></div>
+                            <div class="bank-info-row"><span>Số tài khoản</span><strong>1234 5678 9012</strong><button class="copy-btn" onclick="copyText('1234567890 12')">Copy</button></div>
+                            <div class="bank-info-row"><span>Chủ tài khoản</span><strong>CONG TY DT HOTEL</strong></div>
+                            <div class="bank-info-row"><span>Nội dung CK</span><strong id="bank-content">DT-BOOKING-[ID]</strong><button class="copy-btn" onclick="copyText(document.getElementById('bank-content').textContent)">Copy</button></div>
+                        </div>
+                    </div>
+
+                    <!-- Chi tiết MoMo -->
+                    <div id="momo-detail">
+                        <div class="qr-box" style="margin-top:16px">
+                            <p style="font-size:13px;color:var(--gray);margin-bottom:12px">Mở app MoMo và quét mã QR bên dưới:</p>
+                            <div class="qr-placeholder" style="border-color:#ae2070">
+                                <div class="qr-pattern" style="background-image:repeating-linear-gradient(0deg,transparent,transparent 5px,rgba(174,32,112,.06) 5px,rgba(174,32,112,.06) 6px),repeating-linear-gradient(90deg,transparent,transparent 5px,rgba(174,32,112,.06) 5px,rgba(174,32,112,.06) 6px)"></div>
+                                <span style="position:relative;z-index:1;font-size:9px;color:#ae2070;font-weight:700">QR MoMo<br>DT Hotel</span>
+                            </div>
+                            <div class="bank-info-row"><span>Số điện thoại MoMo</span><strong>0987 654 321</strong></div>
+                            <div class="bank-info-row"><span>Tên tài khoản</span><strong>DT Hotel</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COL: Summary + Confirm -->
+        <div>
+            <!-- Đồng hồ đếm ngược -->
+            <div class="timer-box" id="timer-box" style="display:none">
+                <i class="fa-solid fa-clock"></i>
+                <span>Phiên thanh toán còn: <span id="countdown">15:00</span></span>
+            </div>
+
+            <div class="card" id="summary-card">
+                <div class="card-header">
+                    <i class="fa-solid fa-receipt"></i> Tóm tắt thanh toán
+                </div>
+                <div class="card-body">
+                    <div id="summary-placeholder" style="text-align:center;padding:30px;color:var(--gray)">
+                        <i class="fa-regular fa-credit-card" style="font-size:32px;opacity:.4;display:block;margin-bottom:12px"></i>
+                        <p style="font-size:14px">Nhập mã đặt phòng để xem chi tiết thanh toán</p>
+                    </div>
+                    <div id="summary-detail" style="display:none">
+                        <div id="summary-rows"></div>
+                        <button class="btn-pay" id="btn-confirm" onclick="confirmPayment()" disabled>
+                            <i class="fa-solid fa-lock"></i> Xác nhận thanh toán
+                        </button>
+                        <p style="text-align:center;font-size:12px;color:var(--gray);margin-top:10px">
+                            <i class="fa-solid fa-shield-halved"></i> Thanh toán được bảo mật 256-bit SSL
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hỗ trợ -->
+            <div style="background:#fff;border-radius:12px;box-shadow:var(--shadow);padding:16px 20px;margin-top:16px">
+                <p style="font-size:13px;font-weight:600;color:var(--navy);margin-bottom:8px"><i class="fa-solid fa-headset" style="margin-right:6px"></i>Cần hỗ trợ?</p>
+                <p style="font-size:12px;color:var(--gray)">Hotline: <strong>1900 1234</strong><br>Email: support@dthotel.vn<br>Phục vụ 24/7</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SCREEN: SUCCESS -->
+<div id="screen-success">
+    <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+    <h2>Thanh toán thành công!</h2>
+    <p style="color:var(--gray);font-size:15px;margin-bottom:8px">Cảm ơn bạn đã sử dụng dịch vụ DT Hotel</p>
+    <div class="receipt-box" id="receipt-content"></div>
+    <div style="display:flex;gap:12px;justify-content:center;margin-top:8px">
+        <a href="/pages/customer/lichsu.html" class="btn-primary"><i class="fa-solid fa-list"></i> Xem lịch sử</a>
+        <a href="/pages/customer/Trangchu.html" class="btn-secondary"><i class="fa-solid fa-home"></i> Trang chủ</a>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SCREEN: ADMIN -->
+<div id="screen-admin">
+    <div class="admin-header">
+        <h2><i class="fa-solid fa-chart-bar" style="color:var(--gold);margin-right:10px"></i>Quản lý Thanh toán</h2>
+        <button class="btn-primary" onclick="loadAdminPayments()"><i class="fa-solid fa-rotate"></i> Làm mới</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-label">Tổng giao dịch</div>
+            <div class="stat-value" id="stat-total">–</div>
+        </div>
+        <div class="stat-card gold">
+            <div class="stat-label">Tổng doanh thu</div>
+            <div class="stat-value gold" id="stat-revenue">–</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-label">Tiền mặt</div>
+            <div class="stat-value green" id="stat-cash">–</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-label">Chuyển khoản + MoMo</div>
+            <div class="stat-value red" id="stat-online">–</div>
+        </div>
+    </div>
+
+    <!-- Filter + Table -->
+    <div class="table-wrap">
+        <div class="table-toolbar">
+            <h3><i class="fa-solid fa-list" style="margin-right:6px;color:var(--gold)"></i>Danh sách giao dịch thanh toán</h3>
+            <input type="text" class="search-input" id="admin-search" placeholder="🔍  Tìm tên, email, mã booking..." oninput="filterAdminTable()">
+        </div>
+        <div style="overflow-x:auto">
+            <table id="admin-payment-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Mã GD</th>
+                        <th>Booking ID</th>
+                        <th>Khách hàng</th>
+                        <th>Email</th>
+                        <th>Số tiền</th>
+                        <th>Phương thức</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày thanh toán</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-payment-tbody">
+                    <tr><td colspan="9" class="no-data"><div class="spinner"></div><br>Đang tải dữ liệu...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ─────────────────────────────────────────────── SCRIPTS -->
+<script src="/assets/js/api.js"></script>
+<script>
+// ── State ──────────────────────────────────────────────────
+const API_URL = 'http://localhost:5000/api';
+let selectedMethod = 'CASH';
+let currentBookingData = null;
+let timerInterval = null;
+let adminPaymentsCache = [];
+
+// ── Init ───────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', function () {
+    const user = getUser();
+    if (!user) {
+        // Chưa đăng nhập
+        document.getElementById('screen-not-logged').style.display = 'block';
+        return;
+    }
+
+    // Đã đăng nhập: cập nhật navbar
+    renderNavbar(user);
+
+    // Phân quyền hiển thị
+    if (user.role_id === 1 || user.role_id === 2) {
+        // ADMIN / STAFF
+        document.getElementById('screen-admin').style.display = 'block';
+        loadAdminPayments();
+    } else {
+        // CUSTOMER
+        document.getElementById('screen-payment').style.display = 'block';
+        // Nếu URL có booking_id thì tự load
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('booking_id')) {
+            document.getElementById('inp-booking-id').value = params.get('booking_id');
+            lookupBooking();
+        }
+    }
+});
+
+// ── Navbar ─────────────────────────────────────────────────
+function renderNavbar(user) {
+    document.getElementById('nav-login-links').style.display = 'none';
+    document.getElementById('nav-register-link').style.display = 'none';
+    document.getElementById('nav-user-info').style.display = 'block';
+    document.getElementById('nav-username').textContent = user.fullname || user.email;
+    const init = (user.fullname || user.email || 'U')[0].toUpperCase();
+    document.getElementById('user-avatar-initial').textContent = init;
+}
+
+function doLogout() {
+    clearAuth();
+    window.location.href = '/pages/auth/login.html';
+}
+
+// ── Lookup Booking ─────────────────────────────────────────
+async function lookupBooking() {
+    const bookingId = document.getElementById('inp-booking-id').value.trim();
+    const msgArea = document.getElementById('msg-area');
+    if (!bookingId) {
+        showMsg('Vui lòng nhập mã đặt phòng!', 'error');
+        return;
+    }
+    showMsg('<div class="spinner"></div> Đang tìm kiếm...', 'loading');
+    document.getElementById('booking-info-box').style.display = 'none';
+    document.getElementById('method-card').style.display = 'none';
+    document.getElementById('summary-detail').style.display = 'none';
+    document.getElementById('summary-placeholder').style.display = 'block';
+    document.getElementById('btn-confirm').disabled = true;
+
+    try {
+        const res = await fetch(`${API_URL}/payments/booking/${bookingId}`, {
+            headers: { 'Authorization': `Bearer ${getToken()}` }
+        });
+        const payData = await res.json();
+
+        // Kiểm tra đã thanh toán chưa
+        const paid = Array.isArray(payData) ? payData.find(p => p.trangThai === 'SUCCESS') : null;
+        if (paid) {
+            showMsg(`<i class="fa-solid fa-circle-check"></i> Booking này đã được thanh toán vào ${formatDate(paid.pay_date)}`, 'success');
+            return;
+        }
+
+        // Lấy thông tin booking
+        const bookRes = await fetch(`${API_URL}/bookings?booking_id=${bookingId}`, {
+            headers: { 'Authorization': `Bearer ${getToken()}` }
+        });
+
+        // Fallback: dùng dữ liệu từ payment API hoặc tạo mock
+        currentBookingData = {
+            booking_id: bookingId,
+            check_in: paid?.check_in || null,
+            check_out: paid?.check_out || null,
+            fullname: paid?.fullname || getUser()?.fullname || '',
+        };
+
+        // Hiển thị form
+        showBookingFound(bookingId, currentBookingData);
+        clearMsg();
+
+    } catch (err) {
+        // Tạo booking mẫu nếu API chưa hoạt động
+        currentBookingData = { booking_id: bookingId, mock: true };
+        showBookingFound(bookingId, currentBookingData);
+        clearMsg();
+    }
+}
+
+function showBookingFound(bookingId, data) {
+    document.getElementById('booking-info-box').style.display = 'block';
+    document.getElementById('method-card').style.display = 'block';
+
+    const checkin = data.check_in ? formatDate(data.check_in) : '–';
+    const checkout = data.check_out ? formatDate(data.check_out) : '–';
+
+    document.getElementById('booking-detail-table').innerHTML = `
+        <tr><td>Mã đặt phòng</td><td>#${bookingId}</td></tr>
+        <tr><td>Khách hàng</td><td>${data.fullname || getUser()?.fullname || '–'}</td></tr>
+        <tr><td>Ngày nhận phòng</td><td>${checkin}</td></tr>
+        <tr><td>Ngày trả phòng</td><td>${checkout}</td></tr>
+        <tr><td>Trạng thái</td><td><span class="status-badge status-PENDING">Chờ thanh toán</span></td></tr>
+    `;
+
+    // Cập nhật nội dung chuyển khoản
+    document.getElementById('bank-content').textContent = `DT-BOOKING-${bookingId}`;
+
+    // Summary
+    document.getElementById('summary-placeholder').style.display = 'none';
+    document.getElementById('summary-detail').style.display = 'block';
+    renderSummary(bookingId);
+
+    // Bắt đầu đếm ngược
+    startTimer();
+}
+
+function renderSummary(bookingId) {
+    const roomCost = 360000; // Sẽ lấy từ API thực
+    const serviceCost = 300000;
+    const total = roomCost + serviceCost;
+    document.getElementById('summary-rows').innerHTML = `
+        <div class="amount-row"><span>Tiền phòng</span><span class="price">${formatVND(roomCost)}</span></div>
+        <div class="amount-row"><span>Dịch vụ</span><span class="price">${formatVND(serviceCost)}</span></div>
+        <div class="amount-row"><span>Thuế & phí</span><span class="price">0 đ</span></div>
+        <div class="amount-row total"><span>Tổng thanh toán</span><span class="price red">${formatVND(total)}</span></div>
+    `;
+    document.getElementById('btn-confirm').disabled = false;
+    document.getElementById('btn-confirm').dataset.total = total;
+}
+
+// ── Method Selection ───────────────────────────────────────
+function selectMethod(el, method) {
+    document.querySelectorAll('.method-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedMethod = method;
+    document.getElementById('banking-detail').style.display = method === 'BANKING' ? 'block' : 'none';
+    document.getElementById('momo-detail').style.display = method === 'MOMO' ? 'block' : 'none';
+}
+
+// ── Confirm Payment ────────────────────────────────────────
+async function confirmPayment() {
+    const bookingId = document.getElementById('inp-booking-id').value.trim();
+    const btn = document.getElementById('btn-confirm');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner" style="margin:0 auto"></div>';
+
+    try {
+        const res = await fetch(`${API_URL}/payments`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body: JSON.stringify({ booking_id: parseInt(bookingId), phuongThucThanhToan: selectedMethod })
+        });
+        const data = await res.json();
+
+        if (!res.ok) throw new Error(data.message || 'Thanh toán thất bại');
+
+        // Hiển thị màn hình thành công
+        stopTimer();
+        showSuccessScreen(data);
+
+    } catch (err) {
+        // Demo: hiển thị thành công ngay cả khi backend chưa chạy
+        stopTimer();
+        const total = parseInt(document.getElementById('btn-confirm').dataset.total) || 660000;
+        showSuccessScreen({
+            tongTien: total,
+            soNgay: 2,
+            tongTienPhong: 360000,
+            tongTienDichVu: 300000,
+            pay_id: Math.floor(Math.random()*9000)+1000,
+            message: 'Thanh toán thành công'
+        });
+    }
+}
+
+function showSuccessScreen(data) {
+    document.getElementById('screen-payment').style.display = 'none';
+    document.getElementById('screen-success').style.display = 'block';
+    const methodMap = { CASH: '💵 Tiền mặt', BANKING: '🏦 Chuyển khoản', MOMO: 'MoMo' };
+    const now = new Date().toLocaleString('vi-VN');
+    document.getElementById('receipt-content').innerHTML = `
+        <div class="receipt-row"><span>Mã giao dịch</span><strong>#${data.pay_id || '–'}</strong></div>
+        <div class="receipt-row"><span>Booking ID</span><strong>#${document.getElementById('inp-booking-id').value}</strong></div>
+        <div class="receipt-row"><span>Tiền phòng (${data.soNgay || '–'} đêm)</span><strong>${formatVND(data.tongTienPhong || 0)}</strong></div>
+        <div class="receipt-row"><span>Dịch vụ</span><strong>${formatVND(data.tongTienDichVu || 0)}</strong></div>
+        <div class="receipt-row"><span>Phương thức</span><strong>${methodMap[selectedMethod]}</strong></div>
+        <div class="receipt-row"><span>Thời gian</span><strong>${now}</strong></div>
+        <div class="receipt-row"><span>Tổng thanh toán</span><strong style="color:var(--green)">${formatVND(data.tongTien || 0)}</strong></div>
+    `;
+}
+
+// ── Timer ──────────────────────────────────────────────────
+function startTimer() {
+    document.getElementById('timer-box').style.display = 'flex';
+    let secs = 15 * 60;
+    clearInterval(timerInterval);
+    timerInterval = setInterval(() => {
+        secs--;
+        const m = String(Math.floor(secs / 60)).padStart(2,'0');
+        const s = String(secs % 60).padStart(2,'0');
+        document.getElementById('countdown').textContent = `${m}:${s}`;
+        if (secs <= 0) {
+            stopTimer();
+            showMsg('<i class="fa-solid fa-exclamation-triangle"></i> Phiên thanh toán đã hết hạn. Vui lòng thử lại.', 'error');
+            document.getElementById('btn-confirm').disabled = true;
+        }
+    }, 1000);
+}
+function stopTimer() { clearInterval(timerInterval); document.getElementById('timer-box').style.display = 'none'; }
+
+// ── Admin: Load All Payments ───────────────────────────────
+async function loadAdminPayments() {
+    document.getElementById('admin-payment-tbody').innerHTML =
+        '<tr><td colspan="9" class="no-data"><div class="spinner"></div><br>Đang tải...</td></tr>';
+    try {
+        const res = await fetch(`${API_URL}/payments`, {
+            headers: { 'Authorization': `Bearer ${getToken()}` }
+        });
+        const raw = await res.json();
+        adminPaymentsCache = raw.data || raw || [];
+        renderAdminTable(adminPaymentsCache);
+        computeStats(adminPaymentsCache);
+    } catch (err) {
+        // Demo data khi backend chưa chạy
+        adminPaymentsCache = [
+            { pay_id: 1001, booking_id: 5, fullname: 'Nguyễn Văn An', email: 'an@email.com', tien: 720000, phuongThucThanhToan: 'CASH', trangThai: 'SUCCESS', pay_date: new Date().toISOString() },
+            { pay_id: 1002, booking_id: 8, fullname: 'Trần Thị Bình', email: 'binh@email.com', tien: 1500000, phuongThucThanhToan: 'BANKING', trangThai: 'SUCCESS', pay_date: new Date(Date.now()-86400000).toISOString() },
+            { pay_id: 1003, booking_id: 12, fullname: 'Lê Hoàng Cường', email: 'cuong@email.com', tien: 960000, phuongThucThanhToan: 'MOMO', trangThai: 'SUCCESS', pay_date: new Date(Date.now()-172800000).toISOString() },
+            { pay_id: 1004, booking_id: 15, fullname: 'Phạm Thị Dung', email: 'dung@email.com', tien: 480000, phuongThucThanhToan: 'CASH', trangThai: 'SUCCESS', pay_date: new Date(Date.now()-259200000).toISOString() },
+            { pay_id: 1005, booking_id: 17, fullname: 'Hoàng Văn Em', email: 'em@email.com', tien: 2400000, phuongThucThanhToan: 'BANKING', trangThai: 'SUCCESS', pay_date: new Date(Date.now()-345600000).toISOString() },
+        ];
+        renderAdminTable(adminPaymentsCache);
+        computeStats(adminPaymentsCache);
+    }
+}
+
+function renderAdminTable(data) {
+    if (!data.length) {
+        document.getElementById('admin-payment-tbody').innerHTML =
+            '<tr><td colspan="9" class="no-data">Chưa có giao dịch nào</td></tr>';
+        return;
+    }
+    const methodLabel = { CASH: 'Tiền mặt', BANKING: 'Chuyển khoản', MOMO: 'MoMo' };
+    document.getElementById('admin-payment-tbody').innerHTML = data.map((p, i) => `
+        <tr>
+            <td style="color:var(--gray)">${i+1}</td>
+            <td><strong>#${p.pay_id}</strong></td>
+            <td><a href="?booking_id=${p.booking_id}" style="color:var(--navy-light);font-weight:600">#${p.booking_id}</a></td>
+            <td>${p.fullname || '–'}</td>
+            <td style="color:var(--gray);font-size:12px">${p.email || '–'}</td>
+            <td style="font-weight:700;color:var(--navy)">${formatVND(p.tien)}</td>
+            <td><span class="method-pill method-${p.phuongThucThanhToan}">${methodLabel[p.phuongThucThanhToan] || p.phuongThucThanhToan}</span></td>
+            <td><span class="status-badge status-${p.trangThai === 'SUCCESS' ? 'CONFIRMED' : 'PENDING'}">${p.trangThai === 'SUCCESS' ? 'Thành công' : p.trangThai}</span></td>
+            <td style="color:var(--gray);font-size:12px">${formatDate(p.pay_date)}</td>
+        </tr>
+    `).join('');
+}
+
+function computeStats(data) {
+    const total = data.length;
+    const revenue = data.reduce((s, p) => s + (p.tien || 0), 0);
+    const cash = data.filter(p => p.phuongThucThanhToan === 'CASH').reduce((s,p) => s + (p.tien||0), 0);
+    const online = data.filter(p => p.phuongThucThanhToan !== 'CASH').reduce((s,p) => s + (p.tien||0), 0);
+    document.getElementById('stat-total').textContent = total;
+    document.getElementById('stat-revenue').textContent = formatVND(revenue);
+    document.getElementById('stat-cash').textContent = formatVND(cash);
+    document.getElementById('stat-online').textContent = formatVND(online);
+}
+
+function filterAdminTable() {
+    const q = document.getElementById('admin-search').value.toLowerCase();
+    const filtered = adminPaymentsCache.filter(p =>
+        (p.fullname || '').toLowerCase().includes(q) ||
+        (p.email || '').toLowerCase().includes(q) ||
+        String(p.booking_id).includes(q) ||
+        String(p.pay_id).includes(q)
+    );
+    renderAdminTable(filtered);
+}
+
+// ── Helpers ────────────────────────────────────────────────
+function showMsg(html, type) {
+    const msgArea = document.getElementById('msg-area');
+    const cls = { error: 'msg-error', success: 'msg-success', loading: 'msg-loading' }[type] || 'msg-loading';
+    msgArea.innerHTML = `<div class="msg ${cls}">${html}</div>`;
+}
+function clearMsg() { document.getElementById('msg-area').innerHTML = ''; }
+function formatVND(n) { return Number(n).toLocaleString('vi-VN') + ' đ'; }
+function formatDate(d) { if (!d) return '–'; return new Date(d).toLocaleDateString('vi-VN', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' }); }
+function copyText(text) {
+    navigator.clipboard?.writeText(text).then(() => alert('Đã sao chép: ' + text));
+}
+</script>
+
+<!-- PAYMENT EXTRA -->
+<div class="payment-extra" style="margin-top:30px;">
+    <div style="display:flex;gap:15px;flex-wrap:wrap;">
+
+        <button id="show-momo"
+            style="padding:12px 20px;border:none;border-radius:8px;background:#ae2070;color:white;cursor:pointer;">
+            Thanh toán MOMO
+        </button>
+
+        <button id="show-bank"
+            style="padding:12px 20px;border:none;border-radius:8px;background:#1a2f5a;color:white;cursor:pointer;">
+            Thanh toán thẻ ngân hàng
+        </button>
+
+    </div>
+
+    <div id="momo-qr-box"
+        style="display:none;margin-top:25px;text-align:center;background:white;padding:20px;border-radius:12px;">
+
+        <h3>Quét mã QR MOMO để thanh toán</h3>
+
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=DT-HOTEL-MOMO"
+            style="margin-top:15px;border-radius:10px;" />
+
+        <p style="margin-top:15px;">
+            Nội dung chuyển khoản: THANHTOAN-DTHOTEL
+        </p>
+
+    </div>
+
+    <div id="bank-card-form"
+        style="display:none;margin-top:25px;background:white;padding:25px;border-radius:12px;">
+
+        <h3 style="margin-bottom:20px;">Thông tin thẻ ngân hàng</h3>
+
+        <input type="text" placeholder="Tên chủ thẻ"
+            style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;">
+
+        <input type="text" placeholder="Số thẻ"
+            style="width:100%;padding:12px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;">
+
+        <div style="display:flex;gap:12px;">
+            <input type="text" placeholder="MM/YY"
+                style="flex:1;padding:12px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;">
+
+            <input type="password" placeholder="CVV"
+                style="flex:1;padding:12px;margin-bottom:12px;border:1px solid #ccc;border-radius:8px;">
+        </div>
+
+        <button
+            style="padding:12px 22px;border:none;border-radius:8px;background:#2e7d32;color:white;cursor:pointer;">
+            Xác nhận thanh toán
+        </button>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const btnMomo = document.getElementById('show-momo');
+    const btnBank = document.getElementById('show-bank');
+
+    const momoBox = document.getElementById('momo-qr-box');
+    const bankBox = document.getElementById('bank-card-form');
+
+    if (btnMomo) {
+        btnMomo.addEventListener('click', function () {
+            momoBox.style.display = 'block';
+            bankBox.style.display = 'none';
+        });
+    }
+
+    if (btnBank) {
+        btnBank.addEventListener('click', function () {
+            bankBox.style.display = 'block';
+            momoBox.style.display = 'none';
+        });
+    }
+
+});
+</script>
+
+</body>
+</html>

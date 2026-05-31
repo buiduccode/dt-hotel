@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DT Hotel - Đổi mật khẩu</title>
+
+    <style>
+        /* --- RESET CSS CƠ BẢN --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* --- BỐ CỤC CHIA ĐÔI MÀN HÌNH (50/50) --- */
+        .main-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Bên trái: Khung chứa Logo */
+        .left-side {
+            flex: 0 0 50%;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .logo-wrapper {
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .logo-wrapper img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* Bên phải: Khung chứa Form Đổi mật khẩu */
+        .right-side {
+            flex: 0 0 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            background-color: #ffffff;
+        }
+
+        .form-box {
+            width: 100%;
+            max-width: 420px;
+            /* Độ rộng form tiêu chuẩn */
+        }
+
+        /* --- TIÊU ĐỀ --- */
+        .form-header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 30px;
+        }
+
+        /* --- Ô NHẬP LIỆU (INPUT) --- */
+        .input-group {
+            margin-bottom: 22px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a3673;
+            /* Màu xanh thương hiệu */
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #1a3673;
+        }
+
+        /* --- KHU VỰC NÚT BẤM (BUTTON) --- */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            /* Căn giữa nút bấm theo thiết kế mẫu */
+            margin-top: 35px;
+        }
+
+        .btn-submit {
+            width: 200px;
+            /* Thu nhỏ chiều rộng nút giống hệt ảnh mẫu */
+            padding: 12px;
+            background-color: #224083;
+            /* Màu xanh đậm đặc trưng */
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .btn-submit:hover {
+            background-color: #183063;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-container">
+
+        <div class="left-side">
+            <div class="logo-wrapper">
+                <img src="/assets/images/logo.png" alt="DT Hotel Logo">
+            </div>
+        </div>
+
+        <div class="right-side">
+            <div class="form-box">
+
+                <div class="form-header">
+                    <h2>Đổi mật khẩu</h2>
+                </div>
+
+                <form action="#" method="POST" id="changePasswordForm">
+
+                    <div class="input-group">
+                        <label for="new-password">Nhập mật khẩu mới</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="new-password" name="new-password" placeholder="Nhập mật khẩu mới"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="confirm-password">Nhập lại mật khẩu</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="confirm-password" name="confirm-password"
+                                placeholder="Nhập lại mật khẩu" required>
+                        </div>
+                    </div>
+
+                    <div class="btn-container">
+                        <button type="submit" class="btn-submit">Xác nhận</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/api.js"></script> 
+    <script src="/assets/js/auth.js"></script>
+</body>
+
+</html>

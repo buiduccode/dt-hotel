@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Sử Đặt Phòng</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <style>
+        .info-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px 24px; }
+        .info-grid .form-group { margin:0; }
+        input[readonly] { background:#f4f6fb; color:#666; cursor:not-allowed; }
+        .status-select-row { display:flex; align-items:center; gap:16px; margin-top:8px; }
+        .status-select-row label { font-weight:600; min-width:120px; }
+
+        /* Trạng thái badges */
+        .badge { display:inline-block; padding:3px 11px; border-radius:20px; font-size:12px; font-weight:600; }
+        .badge-pending     { background:#fffbe0; color:#8a6d00; border:1px solid #f0d800; }
+        .badge-confirmed   { background:#fff4e0; color:#b06500; border:1px solid #ffa500; }
+        .badge-cancelled   { background:#fde8e8; color:#c0392b; border:1px solid #e74c3c; }
+        .badge-completed   { background:#e6f9ee; color:#1a7a3a; border:1px solid #27ae60; }
+        .badge-unpaid      { background:#f0f0f0; color:#666; }
+
+        tr.row-selected td { background:#e8f0fb !important; }
+        tr[data-id]:hover td { background:#f5f8ff; cursor:pointer; }
+        .time-range { white-space:nowrap; font-size:13px; }
+        .time-range .sep { color:#999; margin:0 4px; }
+    </style>
+</head>
+<body class="admin-page">
+<header class="header">
+    <div class="logo2"><img src="/assets/images/logo2.svg" alt="DT Hotel Logo"></div>
+    <nav class="navbar">
+        <div class="menu-item" id="auth-container" style="position:relative;cursor:pointer;">
+            <span class="icon"><img src="/assets/images/TaiKhoan2.svg" alt=""></span>
+            <div id="auth-content"></div>
+            <div id="logout-dropdown" style="display:none;position:absolute;top:100%;right:0;background:white;border:1px solid #ddd;border-radius:4px;box-shadow:0 4px 8px rgba(0,0,0,.1);width:120px;text-align:center;z-index:1000;">
+                <p id="btn-logout" style="padding:10px;margin:0;color:#ff4d4d;font-weight:bold;cursor:pointer;">Đăng xuất</p>
+            </div>
+        </div>
+        <div class="menu-item">
+            <span class="icon"><img src="/assets/images/history2.svg" alt=""></span>
+            <div><p>Lịch sử</p><p class="sub-text">thuê phòng</p></div>
+        </div>
+    </nav>
+</header>
+
+<div class="Main-content">
+    <aside class="sidebar">
+        <div class="sidebar-title">Quản Lý Khách Sạn</div>
+        <nav class="sidebar-nav">
+            <a href="QuanLyPhong.html"     class="nav-item">Quản lý phòng</a>
+            <a href="QuanLyKhachHang.html" class="nav-item">Quản lý khách hàng</a>
+            <a href="QuanLyTaiKhoan.html"  class="nav-item">Quản lý tài khoản</a>
+            <a href="LichSuDatPhong.html"  class="nav-item active">Lịch sử đặt phòng</a>
+            <a href="ThongKeThuNhap.html"  class="nav-item">Thống kê thu nhập</a>
+            <a href="/pages/customer/Trangchu.html" class="nav-item"
+               style="margin-top:16px;background:#e8f0fb;color:#204080;border-color:#204080;display:flex;align-items:center;gap:7px;font-weight:700;">
+                &#128065; Xem trang khách hàng
+            </a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <!-- Form: thông tin booking đang chọn + cập nhật trạng thái -->
+        <section class="form-container">
+            <input type="hidden" id="booking-id-hidden">
+            <div class="info-grid">
+                <div class="form-group">
+                    <label>Mã đặt phòng:</label>
+                    <input type="text" id="bk-id"      readonly placeholder="Chọn dòng bên dưới...">
+                </div>
+                <div class="form-group">
+                    <label>Mã phòng:</label>
+                    <input type="text" id="bk-room-number" readonly placeholder="">
+                </div>
+                <div class="form-group">
+                    <label>Tên phòng:</label>
+                    <input type="text" id="bk-room-name"   readonly placeholder="">
+                </div>
+                <div class="form-group">
+                    <label>Mã khách hàng:</label>
+                    <input type="text" id="bk-ma-kh"    readonly placeholder="">
+                </div>
+                <div class="form-group">
+                    <label>Tên khách hàng:</label>
+                    <input type="text" id="bk-fullname" readonly placeholder="">
+                </div>
+                <div class="form-group">
+                    <label>Trạng thái:</label>
+                    <select id="bk-status">
+                        <option value="PENDING">Chờ xác nhận</option>
+                        <option value="CONFIRMED">Đang thanh toán (tiền mặt)</option>
+                        <option value="COMPLETED">Đã thanh toán</option>
+                        <option value="CANCELLED">Đã hủy</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action bar -->
+        <section class="action-bar">
+            <div class="btn-group">
+                <button id="btn-capnhat-booking" class="btn btn-blue">Cập Nhật</button>
+                <button id="btn-huy-booking"     class="btn btn-blue" style="background:#c0392b;">Hủy Đặt Phòng</button>
+            </div>
+            <div class="search">
+                <label>Tìm kiếm</label>
+                <input type="text" id="searchBooking" oninput="searchTable()"
+                       placeholder="Nhập mã đặt, mã phòng hoặc tên KH...">
+            </div>
+        </section>
+
+        <!-- Table -->
+        <section class="table-container">
+            <h3 class="table-title">Lịch sử đặt phòng</h3>
+            <table class="data-table" id="historyTable">
+                <thead>
+                    <tr>
+                        <th>Mã đặt</th>
+                        <th>Mã phòng</th>
+                        <th>Tên phòng</th>
+                        <th>Mã KH</th>
+                        <th>Tên khách hàng</th>
+                        <th>Thời gian (Check-in → Check-out)</th>
+                        <th>Tổng tiền</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="8" style="text-align:center;color:#999">Đang tải...</td></tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+
+<script src="/assets/js/api.js"></script>
+<script src="/assets/js/admin.js"></script>
+</body>
+</html>

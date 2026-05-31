@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DT Hotel - Kết quả tìm kiếm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+        body { background:#f4f5f7; color:#333; }
+
+        .navbar { display:flex; justify-content:space-between; align-items:center; padding:10px 60px; background:#fff; border-bottom:1px solid #eef0f3; }
+        .nav-logo img { height:45px; object-fit:contain; }
+        .nav-menu { display:flex; align-items:center; gap:25px; }
+        .nav-item { display:flex; align-items:center; gap:8px; text-decoration:none; color:#222; font-size:14px; font-weight:500; }
+        .nav-item i { color:#224083; }
+        .btn-nav-register { background:#224083; color:#fff !important; padding:8px 18px; border-radius:6px; font-weight:600; }
+        .btn-logout { background:#d32f2f; color:#fff !important; padding:6px 14px; border-radius:4px; font-weight:600; cursor:pointer; text-decoration:none; }
+        .user-greeting { font-weight:600; color:#224083; font-size:14px; }
+
+        .page-layout { display:flex; max-width:1200px; margin:30px auto; padding:0 20px; gap:28px; }
+
+        /* ── Sidebar lọc ── */
+        .sidebar { width:240px; flex-shrink:0; }
+        .filter-card { background:#fff; border-radius:10px; padding:22px; box-shadow:0 2px 8px rgba(0,0,0,0.06); margin-bottom:20px; }
+        .filter-card h3 { font-size:15px; font-weight:700; color:#1a3673; margin-bottom:14px; border-bottom:2px solid #e8ecf5; padding-bottom:8px; }
+        .filter-card label { display:flex; align-items:center; gap:8px; font-size:14px; cursor:pointer; padding:5px 0; }
+        .filter-card input[type="radio"],
+        .filter-card input[type="checkbox"] { accent-color:#224083; }
+        .price-inputs { display:flex; align-items:center; gap:8px; margin-top:8px; }
+        .price-inputs input { width:100%; padding:6px 10px; border:1px solid #ccc; border-radius:6px; font-size:13px; }
+        .price-inputs span { color:#888; font-size:12px; flex-shrink:0; }
+        .btn-apply { width:100%; margin-top:12px; padding:8px; background:#224083; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:14px; font-weight:600; }
+        .btn-apply:hover { background:#1a3265; }
+
+        /* ── Kết quả ── */
+        .results-area { flex:1; }
+        .results-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; }
+        .results-header h2 { font-size:22px; font-weight:700; color:#000; }
+        .results-count { font-size:14px; color:#666; }
+
+        .room-card { background:#fff; border-radius:12px; box-shadow:0 2px 10px rgba(0,0,0,0.07); margin-bottom:20px; display:flex; overflow:hidden; transition:box-shadow 0.2s; }
+        .room-card:hover { box-shadow:0 6px 20px rgba(0,0,0,0.13); }
+        .room-card-img { width:260px; flex-shrink:0; position:relative; }
+        .room-card-img img { width:100%; height:100%; object-fit:cover; min-height:180px; }
+        .room-type-badge { position:absolute; top:12px; left:12px; background:rgba(34,64,131,0.9); color:#fff; padding:4px 12px; border-radius:20px; font-size:12px; font-weight:600; }
+        .room-card-body { flex:1; padding:20px 24px; display:flex; flex-direction:column; justify-content:space-between; }
+        .room-card-title { font-size:19px; font-weight:700; color:#1a1a1a; margin-bottom:6px; }
+        .room-card-desc { font-size:13px; color:#777; margin-bottom:12px; }
+        .room-amenities { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:12px; }
+        .amenity-tag { display:flex; align-items:center; gap:5px; font-size:12px; color:#555; background:#f0f3fa; padding:4px 10px; border-radius:20px; }
+        .amenity-tag i { color:#224083; font-size:11px; }
+        .room-card-footer { display:flex; justify-content:space-between; align-items:center; }
+        .room-price { font-size:22px; font-weight:800; color:#d32f2f; }
+        .room-price span { font-size:13px; font-weight:400; color:#888; }
+        .status-badge { padding:3px 10px; border-radius:20px; font-size:12px; font-weight:600; }
+        .status-AVAILABLE { background:#e8f5e9; color:#2e7d32; }
+        .status-BOOKED    { background:#fff3e0; color:#e65100; }
+        .status-OCCUPIED  { background:#fce4ec; color:#c62828; }
+        .status-MAINTENANCE { background:#f3e5f5; color:#6a1b9a; }
+        .btn-detail { background:#224083; color:#fff; padding:10px 22px; border-radius:8px; text-decoration:none; font-size:14px; font-weight:600; transition:background 0.2s; }
+        .btn-detail:hover { background:#1a3265; }
+        .btn-detail.disabled { background:#aaa; cursor:not-allowed; pointer-events:none; }
+
+        .empty-state { text-align:center; padding:60px 20px; color:#888; }
+        .empty-state i { font-size:48px; margin-bottom:16px; color:#ccc; }
+        .loading-state { text-align:center; padding:40px; color:#666; }
+        .loading-state i { font-size:32px; color:#224083; animation:spin 1s linear infinite; }
+        @keyframes spin { to { transform:rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-logo">
+            <img src="/assets/images/logo.png" alt="DT Hotel">
+        </div>
+        <div class="nav-menu">
+            <a href="/pages/customer/Trangchu.html" class="nav-item">
+                <i class="fa-solid fa-hotel"></i> Thuê phòng khách sạn
+            </a>
+            <div id="nav-auth-section" style="display:flex;align-items:center;gap:15px;">
+                <a href="/pages/auth/login.html" class="nav-item">
+                    <i class="fa-regular fa-user"></i> Đăng nhập
+                </a>
+                <a href="/pages/auth/SignUp.html" class="nav-item btn-nav-register">Đăng ký</a>
+            </div>
+            <a href="/pages/customer/lichsu.html" class="nav-item">
+                <i class="fa-solid fa-clock-rotate-left"></i> Lịch sử thuê phòng
+            </a>
+        </div>
+    </nav>
+
+    <div class="page-layout">
+        <!-- Sidebar lọc -->
+        <aside class="sidebar">
+            <div class="filter-card">
+                <h3><i class="fa-solid fa-arrow-up-wide-short"></i> Sắp xếp</h3>
+                <label><input type="radio" name="sort" value="default" checked> Mặc định</label>
+                <label><input type="radio" name="sort" value="price-asc"> Giá thấp → cao</label>
+                <label><input type="radio" name="sort" value="price-desc"> Giá cao → thấp</label>
+                <label><input type="radio" name="sort" value="name-asc"> Tên A → Z</label>
+            </div>
+
+            <div class="filter-card">
+                <h3><i class="fa-solid fa-filter"></i> Loại phòng</h3>
+                <label><input type="checkbox" name="type" value="all" checked> Tất cả</label>
+                <label><input type="checkbox" name="type" value="Standard"> Standard</label>
+                <label><input type="checkbox" name="type" value="Superior"> Superior</label>
+                <label><input type="checkbox" name="type" value="Deluxe"> Deluxe</label>
+                <label><input type="checkbox" name="type" value="Family"> Family</label>
+                <label><input type="checkbox" name="type" value="VIP"> VIP</label>
+                <label><input type="checkbox" name="type" value="Suite"> Suite</label>
+                <label><input type="checkbox" name="type" value="Penthouse"> Penthouse</label>
+            </div>
+
+            <div class="filter-card">
+                <h3><i class="fa-solid fa-tag"></i> Khoảng giá</h3>
+                <div class="price-inputs">
+                    <input type="number" id="minPrice" placeholder="Tối thiểu" value="0">
+                    <span>–</span>
+                    <input type="number" id="maxPrice" placeholder="Tối đa" value="10000000">
+                </div>
+                <button class="btn-apply" onclick="applyFilters()">Áp dụng</button>
+            </div>
+
+            <div class="filter-card">
+                <h3><i class="fa-solid fa-circle-check"></i> Trạng thái</h3>
+                <label><input type="checkbox" name="status" value="AVAILABLE" checked> Còn trống</label>
+                <label><input type="checkbox" name="status" value="BOOKED"> Đã đặt</label>
+                <label><input type="checkbox" name="status" value="OCCUPIED"> Đang có khách</label>
+                <label><input type="checkbox" name="status" value="MAINTENANCE"> Bảo trì</label>
+            </div>
+        </aside>
+
+        <!-- Kết quả -->
+        <div class="results-area">
+            <div class="results-header">
+                <h2>Kết quả tìm kiếm</h2>
+                <span class="results-count" id="results-count"></span>
+            </div>
+            <div id="roomList">
+                <div class="loading-state">
+                    <i class="fa-solid fa-spinner"></i>
+                    <p style="margin-top:12px">Đang tải danh sách phòng...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/api.js"></script>
+    <script>
+    const STATUS_VN = { AVAILABLE:'Còn trống', BOOKED:'Đã đặt', OCCUPIED:'Đang có khách', MAINTENANCE:'Bảo trì' };
+    const AMENITIES = ['Wi-Fi miễn phí','Máy lạnh','Tivi','Minibar'];
+
+    let allRooms = [];
+
+    // Navbar
+    const u = getUser();
+    if (u) {
+        document.getElementById('nav-auth-section').innerHTML = `
+            <a href="/pages/customer/HoSo.html" class="user-greeting" style="text-decoration:none;cursor:pointer"><i class="fa-regular fa-circle-user"></i> Xin chào, ${u.fullname}</a>
+            <a href="#" id="btn-logout" class="btn-logout">Đăng xuất</a>
+        `;
+        document.getElementById('btn-logout').addEventListener('click', e => {
+            e.preventDefault(); clearAuth(); window.location.href = '/pages/auth/login.html';
+        });
+    }
+
+    // Load phòng
+    async function loadRooms() {
+        try {
+            const res = await api.get('/rooms');
+            allRooms = res.data || [];
+            applyFilters();
+        } catch (err) {
+            document.getElementById('roomList').innerHTML = `
+                <div class="empty-state">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <p>Không thể tải danh sách phòng: ${err.message}</p>
+                </div>`;
+        }
+    }
+
+    function applyFilters() {
+        let rooms = [...allRooms];
+
+        // Lọc loại phòng
+        const checkedTypes = [...document.querySelectorAll('input[name="type"]:checked')].map(cb => cb.value);
+        if (!checkedTypes.includes('all') && checkedTypes.length > 0) {
+            rooms = rooms.filter(r => checkedTypes.includes(r.room_name));
+        }
+
+        // Lọc trạng thái
+        const checkedStatus = [...document.querySelectorAll('input[name="status"]:checked')].map(cb => cb.value);
+        if (checkedStatus.length > 0) {
+            rooms = rooms.filter(r => checkedStatus.includes(r.trangthai));
+        }
+
+        // Lọc giá
+        const minP = parseInt(document.getElementById('minPrice').value) || 0;
+        const maxP = parseInt(document.getElementById('maxPrice').value) || 99999999;
+        rooms = rooms.filter(r => r.gia >= minP && r.gia <= maxP);
+
+        // Sắp xếp
+        const sort = document.querySelector('input[name="sort"]:checked')?.value || 'default';
+        if (sort === 'price-asc')  rooms.sort((a,b) => a.gia - b.gia);
+        if (sort === 'price-desc') rooms.sort((a,b) => b.gia - a.gia);
+        if (sort === 'name-asc')   rooms.sort((a,b) => a.room_name.localeCompare(b.room_name));
+
+        renderRooms(rooms);
+    }
+
+    function renderRooms(rooms) {
+        const container = document.getElementById('roomList');
+        const countEl   = document.getElementById('results-count');
+        countEl.textContent = `Tìm thấy ${rooms.length} phòng`;
+
+        if (rooms.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <p>Không tìm thấy phòng phù hợp với bộ lọc.</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = rooms.map(r => {
+            const img = getRoomImage(r.room_name, r.room_id, 'thumb');
+            const isAvail  = r.trangthai === 'AVAILABLE';
+            const btnClass = isAvail ? '' : 'disabled';
+            const btnText  = isAvail ? 'Xem chi tiết' : 'Không khả dụng';
+
+            return `
+            <div class="room-card">
+                <div class="room-card-img">
+                    <img src="${img}" alt="${r.room_name}" loading="lazy"
+                         onerror="this.src='https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=400&h=250&fit=crop'">
+                    <span class="room-type-badge">${r.room_name}</span>
+                </div>
+                <div class="room-card-body">
+                    <div>
+                        <div class="room-card-title">${r.room_name} – Phòng ${r.room_number}</div>
+                        <div class="room-card-desc">${r.mieuTa || ''}</div>
+                        <div class="room-amenities">
+                            ${AMENITIES.map(a => `<span class="amenity-tag"><i class="fa-solid fa-check"></i>${a}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="room-card-footer">
+                        <div>
+                            <div class="room-price">${formatVND(r.gia)} <span>/ đêm</span></div>
+                            <span class="status-badge status-${r.trangthai}">${STATUS_VN[r.trangthai] || r.trangthai}</span>
+                        </div>
+                        <a href="/pages/customer/chitietphong.html?room_id=${r.room_id}"
+                           class="btn-detail ${btnClass}">${btnText}</a>
+                    </div>
+                </div>
+            </div>`;
+        }).join('');
+    }
+
+    // Lắng nghe bộ lọc
+    document.querySelectorAll('input[name="sort"]').forEach(r => r.addEventListener('change', applyFilters));
+    document.querySelectorAll('input[name="type"]').forEach(cb => {
+        cb.addEventListener('change', function() {
+            if (this.value === 'all' && this.checked) {
+                document.querySelectorAll('input[name="type"]:not([value="all"])').forEach(c => c.checked = false);
+            } else {
+                document.querySelector('input[name="type"][value="all"]').checked = false;
+            }
+            applyFilters();
+        });
+    });
+    document.querySelectorAll('input[name="status"]').forEach(cb => cb.addEventListener('change', applyFilters));
+
+    loadRooms();
+    </script>
+</body>
+</html>

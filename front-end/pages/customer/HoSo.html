@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DT Hotel - Hồ sơ cá nhân</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif; }
+        body { background:#f4f5f7; min-height:100vh; }
+        .navbar { display:flex; justify-content:space-between; align-items:center; padding:10px 60px; background:#fff; border-bottom:1px solid #eef0f3; }
+        .nav-logo img { height:45px; object-fit:contain; }
+        .nav-menu { display:flex; align-items:center; gap:25px; }
+        .nav-item { display:flex; align-items:center; gap:8px; text-decoration:none; color:#222; font-size:14px; font-weight:500; }
+        .nav-item i { color:#224083; }
+        .btn-logout { background:#d32f2f; color:#fff; padding:6px 14px; border-radius:4px; font-weight:600; cursor:pointer; border:none; font-size:13px; }
+
+        .page-wrap { max-width:780px; margin:40px auto; padding:0 20px; }
+        .page-title { font-size:26px; font-weight:700; color:#1a1a1a; margin-bottom:28px; display:flex; align-items:center; gap:10px; }
+        .page-title i { color:#224083; }
+
+        .profile-card { background:#fff; border-radius:14px; padding:35px 40px; box-shadow:0 2px 12px rgba(0,0,0,0.07); margin-bottom:24px; }
+        .profile-card h3 { font-size:16px; font-weight:700; color:#224083; margin-bottom:22px; border-bottom:2px solid #e8ecf5; padding-bottom:10px; }
+
+        .avatar-section { display:flex; flex-direction:column; align-items:center; margin-bottom:28px; }
+        .avatar-circle { width:80px; height:80px; border-radius:50%; background:#224083; display:flex; align-items:center; justify-content:center; font-size:32px; color:#fff; font-weight:700; margin-bottom:10px; }
+        .avatar-name { font-size:18px; font-weight:700; color:#1a1a1a; }
+        .avatar-role { font-size:13px; color:#888; }
+
+        .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+        .form-group { display:flex; flex-direction:column; gap:6px; }
+        .form-group.full { grid-column:span 2; }
+        .form-group label { font-size:13px; font-weight:700; color:#555; }
+        .form-group input { padding:10px 14px; border:1px solid #ddd; border-radius:8px; font-size:14px; transition:border 0.2s; }
+        .form-group input:focus { outline:none; border-color:#224083; }
+        .form-group input:disabled { background:#f5f5f5; color:#888; cursor:not-allowed; }
+        .btn-save { background:#224083; color:#fff; border:none; padding:11px 32px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; margin-top:8px; }
+        .btn-save:hover { background:#183063; }
+
+        .pass-card { background:#fff; border-radius:14px; padding:35px 40px; box-shadow:0 2px 12px rgba(0,0,0,0.07); }
+        .pass-card h3 { font-size:16px; font-weight:700; color:#224083; margin-bottom:22px; border-bottom:2px solid #e8ecf5; padding-bottom:10px; }
+        .pass-form { display:flex; flex-direction:column; gap:16px; max-width:400px; }
+        .pass-field { display:flex; flex-direction:column; gap:5px; }
+        .pass-field label { font-size:13px; font-weight:700; color:#555; }
+        .pass-input-wrap { position:relative; }
+        .pass-input-wrap input { width:100%; padding:10px 40px 10px 14px; border:1px solid #ddd; border-radius:8px; font-size:14px; }
+        .pass-input-wrap input:focus { outline:none; border-color:#224083; }
+        .toggle-pass { position:absolute; right:12px; top:50%; transform:translateY(-50%); color:#888; cursor:pointer; background:none; border:none; font-size:14px; }
+        .btn-change-pass { background:#224083; color:#fff; border:none; padding:11px 28px; border-radius:8px; font-size:15px; font-weight:700; cursor:pointer; width:fit-content; }
+        .btn-change-pass:hover { background:#183063; }
+
+        .alert { padding:10px 16px; border-radius:8px; font-size:14px; margin-top:12px; }
+        .alert-success { background:#e8f5e9; color:#2e7d32; }
+        .alert-error   { background:#fce4ec; color:#c62828; }
+    </style>
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-logo"><img src="/assets/images/logo.png" alt="DT Hotel"></div>
+    <div class="nav-menu">
+        <a href="/pages/customer/Trangchu.html" class="nav-item"><i class="fa-solid fa-house"></i> Trang chủ</a>
+        <a href="/pages/customer/lichsu.html" class="nav-item"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử</a>
+        <div id="nav-auth-section" style="display:flex;align-items:center;gap:14px;"></div>
+    </div>
+</nav>
+
+<div class="page-wrap">
+    <h1 class="page-title"><i class="fa-regular fa-circle-user"></i> Hồ sơ cá nhân</h1>
+
+    <!-- Thông tin cá nhân -->
+    <div class="profile-card">
+        <div class="avatar-section">
+            <div class="avatar-circle" id="avatarCircle">?</div>
+            <div class="avatar-name" id="avatarName">Đang tải...</div>
+            <div class="avatar-role" id="avatarRole"></div>
+        </div>
+        <h3><i class="fa-solid fa-user-pen"></i> Thông tin cá nhân</h3>
+        <form id="profileForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Họ và tên</label>
+                    <input type="text" id="inp-fullname" placeholder="Họ và tên">
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="text" id="inp-phone" placeholder="Số điện thoại">
+                </div>
+                <div class="form-group full">
+                    <label>Email (không thể thay đổi)</label>
+                    <input type="email" id="inp-email" disabled>
+                </div>
+            </div>
+            <br>
+            <button type="submit" class="btn-save"><i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi</button>
+            <div id="profileMsg"></div>
+        </form>
+    </div>
+
+    <!-- Đổi mật khẩu -->
+    <div class="pass-card">
+        <h3><i class="fa-solid fa-lock"></i> Đổi mật khẩu</h3>
+        <form id="changePassForm" class="pass-form">
+            <div class="pass-field">
+                <label>Mật khẩu hiện tại</label>
+                <div class="pass-input-wrap">
+                    <input type="password" id="oldPass" placeholder="Nhập mật khẩu hiện tại">
+                    <button type="button" class="toggle-pass" onclick="toggleVis('oldPass',this)"><i class="fa-solid fa-eye-slash"></i></button>
+                </div>
+            </div>
+            <div class="pass-field">
+                <label>Mật khẩu mới</label>
+                <div class="pass-input-wrap">
+                    <input type="password" id="newPass" placeholder="Tối thiểu 6 ký tự">
+                    <button type="button" class="toggle-pass" onclick="toggleVis('newPass',this)"><i class="fa-solid fa-eye-slash"></i></button>
+                </div>
+            </div>
+            <div class="pass-field">
+                <label>Xác nhận mật khẩu mới</label>
+                <div class="pass-input-wrap">
+                    <input type="password" id="confirmPass" placeholder="Nhập lại mật khẩu mới">
+                    <button type="button" class="toggle-pass" onclick="toggleVis('confirmPass',this)"><i class="fa-solid fa-eye-slash"></i></button>
+                </div>
+            </div>
+            <button type="submit" class="btn-change-pass"><i class="fa-solid fa-key"></i> Đổi mật khẩu</button>
+            <div id="passMsg"></div>
+        </form>
+    </div>
+</div>
+
+<script src="/assets/js/api.js"></script>
+<script>
+const ROLES = { 1:'Quản trị viên', 2:'Lễ tân', 3:'Khách hàng' };
+
+// Auth check
+const u = getUser();
+if (!u) { window.location.href = '/pages/auth/login.html'; }
+
+document.getElementById('nav-auth-section').innerHTML = `
+    <span style="font-weight:600;color:#224083;font-size:14px;"><i class="fa-regular fa-circle-user"></i> ${u?.fullname}</span>
+    <button class="btn-logout" id="btnLogout">Đăng xuất</button>
+`;
+document.getElementById('btnLogout').addEventListener('click', () => { clearAuth(); window.location.href = '/pages/auth/login.html'; });
+
+// Load profile
+async function loadProfile() {
+    try {
+        const res = await api.get('/auth/profile');
+        const user = res.user_id ? res : (res.data || res);
+
+        document.getElementById('inp-fullname').value = user.fullname || '';
+        document.getElementById('inp-phone').value    = user.phone    || '';
+        document.getElementById('inp-email').value    = user.email    || '';
+
+        const initials = (user.fullname || 'U').split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+        document.getElementById('avatarCircle').textContent = initials;
+        document.getElementById('avatarName').textContent   = user.fullname || '';
+        document.getElementById('avatarRole').textContent   = ROLES[user.role_id] || '';
+    } catch(err) {
+        console.error(err);
+    }
+}
+
+// Save profile
+document.getElementById('profileForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const fullname = document.getElementById('inp-fullname').value.trim();
+    const phone    = document.getElementById('inp-phone').value.trim();
+    const msgEl    = document.getElementById('profileMsg');
+
+    if (!fullname) { showMsg('profileMsg','Vui lòng nhập họ tên!','error'); return; }
+
+    try {
+        await api.put('/auth/profile', { fullname, phone });
+        saveUser({ ...getUser(), fullname, phone });
+        document.getElementById('avatarName').textContent = fullname;
+        document.getElementById('avatarCircle').textContent = fullname.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+        showMsg('profileMsg', '✅ Cập nhật thành công!', 'success');
+    } catch(err) {
+        showMsg('profileMsg', '❌ ' + err.message, 'error');
+    }
+});
+
+// Change password
+document.getElementById('changePassForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const oldPass     = document.getElementById('oldPass').value;
+    const newPass     = document.getElementById('newPass').value;
+    const confirmPass = document.getElementById('confirmPass').value;
+
+    if (!oldPass)          { showMsg('passMsg','Nhập mật khẩu hiện tại!','error'); return; }
+    if (newPass.length < 6){ showMsg('passMsg','Mật khẩu mới tối thiểu 6 ký tự!','error'); return; }
+    if (newPass !== confirmPass){ showMsg('passMsg','Mật khẩu nhập lại không khớp!','error'); return; }
+
+    try {
+        await api.put('/auth/change-password', { oldPassword: oldPass, newPassword: newPass });
+        showMsg('passMsg','✅ Đổi mật khẩu thành công! Vui lòng đăng nhập lại.','success');
+        setTimeout(() => { clearAuth(); window.location.href = '/pages/auth/login.html'; }, 2000);
+    } catch(err) {
+        showMsg('passMsg', '❌ ' + err.message, 'error');
+    }
+});
+
+function showMsg(id, text, type) {
+    const el = document.getElementById(id);
+    el.innerHTML = `<div class="alert alert-${type}">${text}</div>`;
+    setTimeout(() => { el.innerHTML = ''; }, 4000);
+}
+
+function toggleVis(inputId, btn) {
+    const inp = document.getElementById(inputId);
+    const icon = btn.querySelector('i');
+    if (inp.type === 'password') { inp.type = 'text'; icon.className = 'fa-solid fa-eye'; }
+    else { inp.type = 'password'; icon.className = 'fa-solid fa-eye-slash'; }
+}
+
+loadProfile();
+</script>
+</body>
+</html>

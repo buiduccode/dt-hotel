@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê Thu Nhập</title>
+    <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+    <!-- Phần logo and thanh nav -->
+    <header class="header">
+        <!-- logo -->
+        <div class="logo2">
+            <img src="/assets/images/logo2.svg" alt="DT Hotel Logo">
+        </div>
+        <!-- nav-menu -->
+        <nav class="navbar">
+            
+            <div class="menu-item" id="auth-container" style="position: relative; cursor: pointer;">
+                <span class="icon"><img src="/assets/images/TaiKhoan2.svg" alt=""></span>
+                <div id="auth-content">
+                    <p style="margin:0; font-weight:600;">Nguyễn Võ</p>
+                    <p style="margin:0; font-weight:600;">Hoàng Phan</p>
+                </div>
+                <div id="logout-dropdown"
+                    style="display: none; position: absolute; top: 100%; right: 0; background: white; border: 1px solid #ddd; border-radius: 4px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); width: 120px; text-align: center; z-index: 1000;">
+                    <p id="btn-logout"
+                        style="padding: 10px; margin: 0; color: #ff4d4d; font-weight: bold; cursor: pointer;">Đăng xuất
+                    </p>
+                </div>
+            </div>
+            <div class="menu-item">
+                 <span class="icon"><img src="/assets/images/history2.svg" alt=""></span>
+                <div>
+                    <p>Lịch sử</p>
+                    <p class="sub-text">thuê phòng</p>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Main content -->
+    <div class="Main-content">
+        <aside class="sidebar">
+            <div class="sidebar-title">Quản Lý Khách Sạn</div>
+            <nav class="sidebar-nav">
+                <a href="QuanLyPhong.html" class="nav-item ">Quản lý phòng</a>
+                <a href="QuanLyKhachHang.html" class="nav-item">Quản lý khách hàng</a>
+                <a href="QuanLyTaiKhoan.html" class="nav-item ">Quản lý tài khoản</a>
+                <a href="LichSuDatPhong.html" class="nav-item">Lịch sử đặt phòng</a>
+                <a href="ThongKeThuNhap.html" class="nav-item active">Thống kê thu nhập</a>
+                            <a href="/pages/customer/Trangchu.html"
+                   class="nav-item"
+                   style="margin-top:16px; background:#e8f0fb; color:#204080; border-color:#204080; display:flex; align-items:center; gap:7px; font-weight:700;">
+                    &#128065; Xem trang kh&#225;ch h&#224;ng
+                </a>
+            </nav>
+        </aside>
+        <!-- content  -->
+        <main class="content">
+            <!-- bảng thống kê thu nhập theo ngày -->
+            <section class="table-container">
+                <h3 class="table-title">Thống kê thu nhập theo ngày 19-04-2023</h3>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Mã phòng</th>
+                            <th>Tên phòng</th>
+                            <th>Mã dịch vụ</th>
+                            <th>Tên dịch vụ</th>
+                            <th>Thời gian đặt phòng</th>
+                            <th>Tổng tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="cell-focus-blue">R001</td>
+                            <td>Phòng gia đình</td>
+                            <td>DV011</td>
+                            <td>Đưa đón sân bay bằng xe máy</td>
+                            <td>19-04-2023</td>
+                            <td>650,000</td>
+                        </tr>
+                        <tr class="row-highlight">
+                            <td>R001</td>
+                            <td>Phòng gia đình</td>
+                            <td>DV011</td>
+                            <td>Đưa đón sân bay bằng xe máy</td>
+                            <td>19-04-2023</td>
+                            <td>650,000</td>
+                        </tr>
+                        <tr>
+                            <td>R001</td>
+                            <td>Phòng gia đình</td>
+                            <td>DV011</td>
+                            <td>Đưa đón sân bay bằng xe máy</td>
+                            <td>19-04-2023</td>
+                            <td>650,000</td>
+                        </tr>
+                        <tr class="row-highlight">
+                            <td>R001</td>
+                            <td>Phòng gia đình</td>
+                            <td>DV011</td>
+                            <td>Đưa đón sân bay bằng xe máy</td>
+                            <td>19-04-2023</td>
+                            <td>650,000</td>
+                        </tr>
+                        <tr>
+                            <td>R001</td>
+                            <td>Phòng gia đình</td>
+                            <td>DV011</td>
+                            <td>Đưa đón sân bay bằng xe máy</td>
+                            <td>19-04-2023</td>
+                            <td>650,000</td>
+                        </tr>
+                        <tr class="row-highlight">
+                            <td>R001</td>
+                            <td>Phòng gia đình</td>
+                            <td>DV011</td>
+                            <td>Đưa đón sân bay bằng xe máy</td>
+                            <td>19-04-2023</td>
+                            <td>650,000</td>
+                        </tr>
+                        <tr>
+                            <td>R001</td>
+                            <td>Phòng gia đình</td>
+                            <td>DV011</td>
+                            <td>Đưa đón sân bay bằng xe máy</td>
+                            <td>19-04-2023</td>
+                            <td>650,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <!-- thổng doanh thu và nút in -->
+            <section class="summary-container">
+                <div class="total-revenue">
+                    <span>Tổng doanh thu:</span>
+                    <span class="price-number">4,550,000 đ</span>
+                </div>
+                <button type="button" class="btn-print" onclick="window.print()">In</button>
+            </section>
+        </main>
+    </div>
+    <script src="/assets/js/api.js"></script>
+    <script src="/assets/js/admin.js"></script>
+</body>
+</html>

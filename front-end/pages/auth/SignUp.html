@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DT Hotel - Đăng ký tài khoản</title>
+    <style>
+        /* --- RESET CSS CƠ BẢN --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* --- BỐ CỤC CHIA ĐÔI MÀN HÌNH --- */
+        .register-container {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* Bên trái: Chứa Logo (Cố định 60%) */
+        .left-side {
+            flex: 0 0 60%;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+
+        .logo-wrapper {
+            width: 100%;
+            max-width: 700px;
+            text-align: center;
+        }
+
+        .logo-wrapper img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* Bên phải: Chứa Form đăng ký (Chiếm 40%) */
+        .right-side {
+            flex: 0 0 40%;
+            margin-left: 60%;
+            /* Đẩy qua phải khớp với tỷ lệ bên left-side */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 50px 40px;
+            background-color: #ffffff;
+        }
+
+        .form-box {
+            width: 100%;
+            max-width: 460px;
+        }
+
+        /* --- TIÊU ĐỀ --- */
+        .form-header h2 {
+            font-size: 30px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            font-size: 15px;
+            color: #7a8293;
+            margin-bottom: 30px;
+        }
+
+        /* --- Ô NHẬP LIỆU PHỔ THÔNG --- */
+        .input-group {
+            margin-bottom: 18px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a3673;
+            margin-bottom: 6px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1px solid #dcdcdc;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #1a3673;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #c0c0c0;
+        }
+
+        .input-wrapper .icon-left {
+            position: absolute;
+            left: 14px;
+            color: #a0a0a0;
+            font-size: 15px;
+        }
+
+        .input-wrapper .icon-right {
+            position: absolute;
+            right: 14px;
+            color: #a0a0a0;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .input-wrapper.has-icon-left input {
+            padding-left: 38px;
+        }
+
+        .input-wrapper.has-icons-both input {
+            padding-left: 38px;
+            padding-right: 38px;
+        }
+
+        /* --- HÀNG ĐẶC BIỆT: GIỚI TÍNH & NGÀY SINH --- */
+        .row-inline {
+            display: flex;
+            align-items: center;
+            margin-bottom: 18px;
+            font-size: 14px;
+        }
+
+        .row-inline .label-inline {
+            font-weight: 600;
+            color: #1a3673;
+            min-width: 90px;
+        }
+
+        .gender-options {
+            display: flex;
+            gap: 15px;
+        }
+
+        .gender-options label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #333333;
+        }
+
+        .gender-options input[type="radio"] {
+            accent-color: #1a3673;
+            transform: scale(1.1);
+        }
+
+        .birth-input {
+            width: 140px;
+        }
+
+        .birth-input input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #dcdcdc;
+            border-radius: 4px;
+            outline: none;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* --- CHECKBOX ĐIỀU KHOẢN --- */
+        .policy-group {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-top: 22px;
+            margin-bottom: 25px;
+        }
+
+        .policy-group input[type="checkbox"] {
+            margin-top: 3px;
+            accent-color: #1a3673;
+            cursor: pointer;
+        }
+
+        .policy-group label {
+            font-size: 13px;
+            color: #333333;
+            line-height: 1.4;
+            cursor: pointer;
+        }
+
+        .policy-group label a {
+            color: #224083;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .policy-group label a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- NÚT TẠO TÀI KHOẢN --- */
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            background-color: #224083;
+            color: #ffffff;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            text-align: center;
+        }
+
+        .btn-submit:hover {
+            background-color: #183063;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <div class="left-side">
+            <div class="logo-wrapper">
+                <img src="/assets/images/logo.png" alt="DT Hotel Logo">
+            </div>
+        </div>
+        <div class="right-side">
+            <div class="form-box">
+                <div class="form-header">
+                    <h2>Đăng ký tài khoản của bạn</h2>
+                    <p>Điền vào các thông tin dưới đây để đăng ký tài khoản.</p>
+                </div>
+                <form action="#" method="POST" id="registerForm">
+                    <div class="input-group">
+                        <label for="fullname">Họ và Tên</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="fullname" name="fullname" placeholder="Họ và Tên" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="phone">Số điện thoại</label>
+                        <div class="input-wrapper has-icon-left">
+                            <i class="fa-solid fa-mobile-screen-button icon-left"></i>
+                            <input type="tel" id="phone" name="phone" placeholder="(+84)" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="email">Email</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="email" name="email" placeholder="Email" required>
+                        </div>
+                    </div>
+                    <div class="row-inline">
+                        <span class="label-inline">Giới tính</span>
+                        <div class="gender-options">
+                            <label><input type="radio" name="gender" value="Nam" checked> Nam</label>
+                            <label><input type="radio" name="gender" value="Nữ"> Nữ</label>
+                        </div>
+                    </div>
+                    <div class="row-inline">
+                        <span class="label-inline">Ngày sinh</span>
+                        <div class="birth-input">
+                            <input type="date" id="birthday" name="birthday" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="address">Địa chỉ</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="address" name="address" placeholder="Địa chỉ">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="username">Tên đăng nhập</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="username" name="username" placeholder="Tên đăng nhập" required>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="password">Mật khẩu</label>
+                        <div class="input-wrapper has-icons-both">
+                            <i class="fa-solid fa-lock icon-left"></i>
+                            <input type="password" id="password" name="password" placeholder="Mật khẩu" required>
+                            <i class="fa-solid fa-eye-slash icon-right" id="togglePassword"></i>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="re-password">Nhập lại mật khẩu</label>
+                        <div class="input-wrapper has-icons-both">
+                            <i class="fa-solid fa-lock icon-left"></i>
+                            <input type="password" id="re-password" name="re-password" placeholder="Nhập lại mật khẩu"
+                                required>
+                            <i class="fa-solid fa-eye-slash icon-right" id="toggleRePassword"></i>
+                        </div>
+                    </div>
+                    <div class="policy-group">
+                        <input type="checkbox" id="policy" name="policy" required>
+                        <label for="policy">
+                            Tôi đồng ý với <a href="#">Điều khoản sử dụng</a> và <a href="#">Chính sách bảo mật</a>.
+                        </label>
+                    </div>
+                    <button type="submit" class="btn-submit">Tạo tài khoản</button>
+                </form>
+            </div>
+        </div>
+    </div>
+        <script src="/assets/js/api.js"></script> 
+    <script src="/assets/js/auth.js"></script>
+</body>
+</html>
